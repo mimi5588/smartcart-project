@@ -1,0 +1,18 @@
+:root {
+  --primary: #6fd3c1;
+  --secondary: #b8a6ff;
+  --accent: #8ed2ff;
+  --background: #f7f9fc;
+  --text: #1f2937;
+  --error: #ff7a7a;
+  --success: #63d39b;
+  --radius: 20px;
+  --space: 8px;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--background);
+  color: var(--text);
+}
