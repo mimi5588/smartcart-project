@@ -1,43 +1,46 @@
-import Navbar from "../components/Navbar";
+import { Link } from "react-router-dom";
+
 import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
+import supermarketBackground from "../assets/supermarket-background.png";
 
 function HomePage() {
   return (
     <div>
       <Navbar />
 
-      <main style={{ padding: "24px" }}>
+      <main
+        className="home-hero"
+        style={{ backgroundImage: `url(${supermarketBackground})` }}
+      >
+        <p className="eyebrow">Smart shopping assistant</p>
         <h1>שלום קארין 👋</h1>
-
         <p>ברוכה הבאה ל־SmartCart</p>
 
-        <div
-          style={{
-            background: "#fff",
-            padding: "20px",
-            borderRadius: "20px",
-            marginTop: "20px",
-          }}
-        >
+        <div className="budget-card">
           <h2>התקציב החודשי שלך</h2>
-          <p>₪1,200 נשארו החודש</p>
+          <p>נשארו החודש ₪1,200</p>
         </div>
 
-        <button
-          style={{
-            marginTop: "20px",
-            padding: "14px 24px",
-            background: "#6FD3C1",
-            border: "none",
-            borderRadius: "20px",
-            color: "white",
-            fontSize: "16px",
-            cursor: "pointer",
-          }}
-        >
+        <Link className="start-shopping-button" to="/scan">
           התחל קנייה
-        </button>
+        </Link>
       </main>
+
+      <section className="home-summary">
+        <article>
+          <strong>3</strong>
+          <span>מוצרים ברשימה</span>
+        </article>
+        <article>
+          <strong>₪84</strong>
+          <span>חיסכון החודש</span>
+        </article>
+        <article>
+          <strong>7</strong>
+          <span>החלפות חכמות</span>
+        </article>
+      </section>
 
       <Footer />
     </div>

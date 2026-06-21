@@ -1,22 +1,32 @@
+import { NavLink } from "react-router-dom";
+
+const navItems = [
+  { label: "Home", path: "/" },
+  { label: "Scan", path: "/scan" },
+  { label: "Dashboard", path: "/dashboard" },
+  { label: "Profile", path: "/profile" },
+];
+
 function Navbar() {
   return (
-    <nav
-      style={{
-        padding: "16px",
-        background: "#6FD3C1",
-        color: "#fff",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-      }}
-    >
-      <h2>SmartCart</h2>
+    <nav className="navbar">
+      <NavLink className="navbar-brand" to="/">
+        SmartCart
+      </NavLink>
 
-      <div style={{ display: "flex", gap: "16px" }}>
-        <span>Home</span>
-        <span>Scan</span>
-        <span>Dashboard</span>
-        <span>Profile</span>
+      <div className="navbar-actions">
+        {navItems.map((item) => (
+          <NavLink
+            className={({ isActive }) =>
+              `navbar-button${isActive ? " navbar-button-active" : ""}`
+            }
+            end={item.path === "/"}
+            key={item.path}
+            to={item.path}
+          >
+            {item.label}
+          </NavLink>
+        ))}
       </div>
     </nav>
   );
