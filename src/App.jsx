@@ -1,4 +1,5 @@
-﻿import { useEffect, useMemo, useRef, useState } from "react";
+﻿/* eslint-disable no-irregular-whitespace */
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -80,7 +81,7 @@ const BULK_CATALOG_SECTIONS = [
 ];
 
 const BULK_PRICE_OVERRIDES = {
-  ׳‘׳™׳¦׳™׳: 14.9,
+  "׳‘׳™׳¦׳™׳": 14.9,
 };
 
 const BULK_CATALOG_ITEMS = BULK_CATALOG_SECTIONS.flatMap(([category, brand, emoji, basePrice, rawItems], sectionIndex) =>
@@ -510,8 +511,8 @@ const DEFAULT_PROFILE = {
 const storageKeyForUser = (userId) => `smartcart-polished-state-${userId}`;
 const RESTRICTIONS = ["׳˜׳‘׳¢׳•׳ ׳™", "׳¦׳׳—׳•׳ ׳™", "׳׳׳ ׳׳§׳˜׳•׳–", "׳׳׳ ׳’׳׳•׳˜׳", "׳׳׳ ׳׳’׳•׳–׳™׳"];
 const RESTRICTION_MATCH = {
-  ׳˜׳‘׳¢׳•׳ ׳™: "Vegan",
-  ׳¦׳׳—׳•׳ ׳™: "Vegetarian",
+  "׳˜׳‘׳¢׳•׳ ׳™": "Vegan",
+  "׳¦׳׳—׳•׳ ׳™": "Vegetarian",
   "׳׳׳ ׳׳§׳˜׳•׳–": "Lactose-free",
   "׳׳׳ ׳’׳׳•׳˜׳": "Gluten-free",
   "׳׳׳ ׳׳’׳•׳–׳™׳": "Nut-free",
@@ -592,8 +593,8 @@ function loadState(userId, baseProfile = DEFAULT_PROFILE) {
 function App() {
   const [activeView, setActiveView] = useState("home");
   const [session, setSession] = useState(null);
-  const [authLoading, setAuthLoading] = useState(true);
-  const [authError, setAuthError] = useState("");
+  const [authLoading, setAuthLoading] = useState(isSupabaseConfigured);
+  const [authError, setAuthError] = useState(isSupabaseConfigured ? "" : "Supabase is not configured.");
   const [state, setState] = useState(() => createDefaultState(DEFAULT_PROFILE));
   const [selectedId, setSelectedId] = useState(CATALOG[1].id);
   const [catalogOpen, setCatalogOpen] = useState(false);
@@ -617,8 +618,6 @@ function App() {
 
   useEffect(() => {
     if (!supabase) {
-      setAuthLoading(false);
-      setAuthError("Supabase is not configured.");
       return undefined;
     }
 
@@ -646,7 +645,6 @@ function App() {
     remoteReadyRef.current = false;
 
     if (!activeUserId || !user) {
-      setState(createDefaultState(DEFAULT_PROFILE));
       syncStatusRef.current = "signed-out";
       return () => {
         cancelled = true;
