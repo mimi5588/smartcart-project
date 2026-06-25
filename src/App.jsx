@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Area,
   AreaChart,
   Bar,
-  BarChart,
   CartesianGrid,
   ResponsiveContainer,
   Tooltip,
@@ -15,6 +14,8 @@ import butterImage from "./assets/products/butter-tnuva.png";
 import greenBeansImage from "./assets/products/green-beans-rami-levy.png";
 import riceImage from "./assets/products/jasmin-rice-rami-levy.png";
 import sourCreamImage from "./assets/products/sour-cream-tnuva.png";
+import { isSupabaseConfigured } from "./lib/supabaseClient";
+import { fetchSmartCartState, saveSmartCartState } from "./lib/smartcartState";
 
 const produceImage = (emoji) =>
   `data:image/svg+xml,${encodeURIComponent(`
@@ -565,35 +566,44 @@ function getDemoProfile(userId) {
   return DEMO_USERS.find((user) => user.id === userId)?.profile || DEFAULT_PROFILE;
 }
 
+function normalizeStoredState(userId, storedState) {
+  const baseProfile = getDemoProfile(userId);
+  const parsed = storedState || {};
+  const parsedProfile = parsed.profile || {};
+
+  if (parsedProfile.firstName === "Karin" || parsedProfile.email === "karin@smartcart.local") {
+    return {
+      ...parsed,
+      list: Array.isArray(parsed.list) ? parsed.list : createDefaultState(baseProfile).list,
+      profile: {
+        ...baseProfile,
+        ...parsedProfile,
+        firstName: baseProfile.firstName,
+        lastName: baseProfile.lastName,
+        email: baseProfile.email,
+        address: baseProfile.address,
+        emoji: parsedProfile.emoji || baseProfile.emoji,
+        avatarBg: parsedProfile.avatarBg || baseProfile.avatarBg,
+        budget: parsedProfile.budget || baseProfile.budget,
+      },
+    };
+  }
+
+  return {
+    ...parsed,
+    list: Array.isArray(parsed.list) ? parsed.list : createDefaultState(baseProfile).list,
+    profile: {
+      ...baseProfile,
+      ...parsedProfile,
+    },
+  };
+}
+
 function loadState(userId = "may") {
   try {
     const saved = localStorage.getItem(storageKeyForUser(userId)) || (userId === "may" ? localStorage.getItem(LEGACY_STORAGE_KEY) : null);
     if (saved) {
-      const parsed = JSON.parse(saved);
-      const baseProfile = getDemoProfile(userId);
-      if (parsed.profile?.firstName === "Karin" || parsed.profile?.email === "karin@smartcart.local") {
-        return {
-          ...parsed,
-          profile: {
-            ...baseProfile,
-            ...parsed.profile,
-            firstName: baseProfile.firstName,
-            lastName: baseProfile.lastName,
-            email: baseProfile.email,
-            address: baseProfile.address,
-            emoji: parsed.profile.emoji || baseProfile.emoji,
-            avatarBg: parsed.profile.avatarBg || baseProfile.avatarBg,
-            budget: parsed.profile.budget || baseProfile.budget,
-          },
-        };
-      }
-      return {
-        ...parsed,
-        profile: {
-          ...baseProfile,
-          ...parsed.profile,
-        },
-      };
+      return normalizeStoredState(userId, JSON.parse(saved));
     }
   } catch {
     // Ignore corrupted client state and fall back to defaults.
@@ -613,6 +623,9 @@ function App() {
   const [lightbox, setLightbox] = useState(null);
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [toast, setToast] = useState("");
+  const syncStatusRef = useRef(isSupabaseConfigured ? "connecting" : "local");
+  const remoteReadyRef = useRef(false);
+  const saveTimerRef = useRef(null);
 
   useEffect(() => {
     document.documentElement.lang = "he";
@@ -621,8 +634,71 @@ function App() {
   }, [state.profile.firstName, state.profile.lastName]);
 
   useEffect(() => {
+    let cancelled = false;
+    const localState = loadState(activeUserId);
+
+    remoteReadyRef.current = false;
+    localStorage.setItem(ACTIVE_USER_KEY, activeUserId);
+
+    if (!isSupabaseConfigured) {
+      remoteReadyRef.current = true;
+      syncStatusRef.current = "local";
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    syncStatusRef.current = "syncing";
+    fetchSmartCartState(activeUserId)
+      .then((remoteState) => {
+        if (cancelled) return;
+        remoteReadyRef.current = true;
+
+        if (remoteState) {
+          setState(normalizeStoredState(activeUserId, remoteState));
+          syncStatusRef.current = "synced";
+          return;
+        }
+
+        saveSmartCartState(activeUserId, localState)
+          .then(() => {
+            syncStatusRef.current = "synced";
+          })
+          .catch(() => {
+            syncStatusRef.current = "offline";
+          });
+      })
+      .catch(() => {
+        if (!cancelled) {
+          remoteReadyRef.current = true;
+          syncStatusRef.current = "offline";
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeUserId]);
+
+  useEffect(() => {
     localStorage.setItem(storageKeyForUser(activeUserId), JSON.stringify(state));
     localStorage.setItem(ACTIVE_USER_KEY, activeUserId);
+
+    if (!isSupabaseConfigured || !remoteReadyRef.current) return undefined;
+
+    syncStatusRef.current = "syncing";
+    window.clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = window.setTimeout(() => {
+      saveSmartCartState(activeUserId, state)
+        .then(() => {
+          syncStatusRef.current = "synced";
+        })
+        .catch(() => {
+          syncStatusRef.current = "offline";
+        });
+    }, 450);
+
+    return () => window.clearTimeout(saveTimerRef.current);
   }, [state, activeUserId]);
 
   useEffect(() => {
@@ -1183,7 +1259,7 @@ function SetupView({ budget, supermarket, onSelectStore, onStart }) {
           </div>
           <input placeholder="חיפוש סופר..." />
           <div className="store-grid">
-            {stores.map(([name, distance, icon], index) => (
+            {stores.map(([name, distance, icon]) => (
               <button
                 className={name === supermarket ? "store-option selected" : "store-option"}
                 key={name}
@@ -1617,9 +1693,11 @@ function CachedImage({ src, alt, onLightbox }) {
   const [displaySrc, setDisplaySrc] = useState(src);
   useEffect(() => {
     let cancelled = false;
-    setDisplaySrc(src);
     async function cacheImage() {
-      if (!("caches" in window) || !src.startsWith("http")) return;
+      if (!("caches" in window) || !src.startsWith("http")) {
+        setDisplaySrc(src);
+        return;
+      }
       const cache = await caches.open("smartcart-image-cache-v1");
       const cached = await cache.match(src);
       if (!cached) {
