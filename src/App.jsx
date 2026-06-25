@@ -11,17 +11,92 @@ import {
   YAxis,
 } from "recharts";
 import apropoImage from "./assets/products/apropro-osem.png";
-import bambaImage from "./assets/products/bamba-osem.png";
 import butterImage from "./assets/products/butter-tnuva.png";
 import greenBeansImage from "./assets/products/green-beans-rami-levy.png";
 import riceImage from "./assets/products/jasmin-rice-rami-levy.png";
 import sourCreamImage from "./assets/products/sour-cream-tnuva.png";
 
+const produceImage = (emoji) =>
+  `data:image/svg+xml,${encodeURIComponent(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+    <rect width="240" height="240" rx="42" fill="white"/>
+    <text x="120" y="150" text-anchor="middle" font-size="112" font-family="Arial, sans-serif">${emoji}</text>
+  </svg>
+`)}`;
+
+const CATEGORY_LABELS = {
+  All: "הכל",
+  Produce: "פירות וירקות",
+  Dairy: "מוצרי חלב",
+  Cheese: "גבינות",
+  Meat: "בשרים",
+  Deli: "נקניקים",
+  Cleaning: "ניקיון",
+  Pantry: "מזווה",
+  Drinks: "שתייה",
+  DryGoods: "מוצרי יסוד יבשים",
+  Pasta: "פסטות ואטריות",
+  Sauces: "שמנים ורטבים",
+  Canned: "שימורים ומוכנים",
+  Bakery: "לחמים ומאפים",
+  Frozen: "קפואים",
+  Hygiene: "נייר והיגיינה",
+  Storage: "חד פעמי ואחסון",
+  Snacks: "נשנושים ומתוקים",
+};
+
+const DIETARY_LABELS = {
+  Vegan: "טבעוני",
+  Vegetarian: "צמחוני",
+  Lactose: "מכיל לקטוז",
+  "Lactose-free": "ללא לקטוז",
+  "Gluten-free": "ללא גלוטן",
+  "Nut-free": "ללא אגוזים",
+  "Sugar-free": "ללא סוכר",
+  Household: "משק בית",
+};
+
+const BULK_CATALOG_SECTIONS = [
+  ["DryGoods", "מזווה בסיסי", "🥣", 5.9, "אורז לבן, אורז בסמטי, אורז מלא, פתיתים, בורגול, קוסקוס, קינואה, עדשים ירוקות, עדשים כתומות, חומוס יבש, שעועית לבנה, שעועית אדומה, גריסים, קמח לבן, קמח מלא, קמח תופח, סוכר לבן, סוכר חום, אבקת סוכר, מלח, פלפל שחור, פפריקה מתוקה, פפריקה חריפה, כורכום, כמון, קינמון, אבקת שום, אבקת מרק עוף, אבקת מרק בצל, פירורי לחם, שומשום, טחינה גולמית, דבש, סילאן, ריבה, חמאת בוטנים, שוקולד למריחה, קקאו, אבקת אפייה, סודה לשתייה, תמצית וניל"],
+  ["Pasta", "פסטות ואטריות", "🍝", 7.9, "פסטה ספגטי, פסטה פנה, פסטה פוזילי, פסטה פרפרים, פסטה מקרוני, פסטה מלאה, פסטה ללא גלוטן, אטריות ביצים, אטריות אורז, נודלס להקפצה, פתיתים אפויים, קוסקוס מהיר הכנה, רביולי מוכן, ניוקי, רוטב עגבניות לפסטה, רסק עגבניות, עגבניות מרוסקות, עגבניות קוביות, רוטב שמנת לפסטה, פסטו, זיתים לפסטה, תירס לקופסה, פטריות משומרות, טונה לפסטה"],
+  ["Sauces", "שמנים ורטבים", "🫙", 8.9, "שמן קנולה, שמן זית, שמן חמניות, שמן אבוקדו, שמן שומשום, ספריי שמן, חומץ רגיל, חומץ תפוחים, חומץ בלסמי, רוטב סויה, רוטב צ׳ילי מתוק, רוטב טריאקי, קטשופ, מיונז, חרדל, רוטב ברביקיו, רוטב שום, רוטב אלף האיים, רוטב לסלט, לימון משומר, מיץ לימון, מלח גס, מלח לימון, עלי דפנה, צ׳ילי גרוס, אורגנו, בזיליקום יבש, זעתר, תבלין על האש, תבלין שווארמה, תבלין לקציצות, תבלין לפיצה"],
+  ["Canned", "שימורים ומוכנים", "🥫", 6.9, "טונה בשמן, טונה במים, תירס משומר, אפונה וגזר, חומוס משומר, שעועית ברוטב עגבניות, פטריות חתוכות, מלפפונים חמוצים, זיתים ירוקים, זיתים שחורים, פלפל קלוי, חלב קוקוס, מרק נמס, מנה חמה, קרקרים אישיים, חטיפי אנרגיה, גרנולה, דגני בוקר, קורנפלקס, שיבולת שועל"],
+  ["Drinks", "שתייה", "🥤", 5.9, "מים מינרלים, סודה, קולה, קולה זירו, ספרייט, פאנטה, מיץ תפוזים, מיץ ענבים, מיץ תפוחים, תה קר, אייס קפה, קפה שחור, נס קפה, קפסולות קפה, קפה נמס, תה רגיל, תה ירוק, תה נענע, תה קמומיל, שוקו, חלב רגיל, חלב דל לקטוז, חלב סויה, חלב שקדים, חלב שיבולת שועל, משקה אנרגיה, תרכיז פטל, תרכיז ענבים, תרכיז לימונענע"],
+  ["Bakery", "לחמים ומאפים", "🥖", 7.5, "לחם אחיד, לחם פרוס, לחם מלא, לחם קל, לחם כוסמין, לחם שיפון, לחמניות רגילות, לחמניות מלאות, פיתות, פיתות מקמח מלא, בייגל, טורטיות, לאפות, חלה, באגט, ג׳בטה, פריכיות אורז, פריכיות תירס, צנימים, טוסטעים, קרקרים מלוחים, קרקרים מחיטה מלאה, קרקרים עם שומשום, קרקרים דקים, פתיבר, עוגיות יבשות, עוגיות שוקולד צ׳יפס, עוגיות מלוחות, ביסקוויטים, גריסיני"],
+  ["Dairy", "מקרר חלב", "🥛", 6.9, "חלב, ביצים, גבינה לבנה, גבינה בולגרית, גבינת פטה, גבינת שמנת, יוגורט לבן, יוגורט בטעמים, מעדנים, שמנת מתוקה, שמנת לבישול, מרגרינה, גבינה מגורדת, מוצרלה, פרמזן"],
+  ["Produce", "תוצרת טרייה", "🥬", 4.9, "בצל לבן, בצל סגול, שום, בטטה, פלפל צהוב, חסה, כרוב, פטרוזיליה, כוסברה, שמיר, נענע, לימון, אבוקדו, קישואים, חצילים, פטריות טריות, תפוזים, ענבים, אגסים, אפרסקים, שזיפים, תותים, מלון, אבטיח"],
+  ["Meat", "קצבייה ודגים", "🥩", 24.9, "פרגיות, שוקיים, כנפיים, בשר טחון, קציצות מוכנות, שניצלים, נקניקיות, המבורגר קפוא, דג סלמון, דג אמנון, טונה טרייה או קפואה, קבב, שווארמה קפואה"],
+  ["Frozen", "קפואים", "🧊", 12.9, "ירקות קפואים, ברוקולי קפוא, שעועית ירוקה, אפונה קפואה, תירס קפוא, צ׳יפס קפוא, בורקסים, ג׳חנון, מלאווח, פיצה קפואה, שניצל תירס, המבורגר צמחוני, גלידות, קרח"],
+  ["Cleaning", "ניקיון לבית", "🧽", 9.9, "טבליות למדיח, מלח למדיח, נוזל הברקה למדיח, ספוגים לכלים, סקוצ׳ים, מטליות ניקוי, מטליות מיקרופייבר, נייר סופג, מגבונים לניקוי כללי, מגבונים לרצפה, אקונומיקה, מסיר שומנים, ספריי ניקוי כללי, ספריי חלונות, חומר לניקוי רצפה, חומר לניקוי שירותים, ג׳ל אסלה, מסיר אבנית, חומר לניקוי אמבטיה, אבקת כביסה, מרכך כביסה, מסיר כתמים, מבשם כביסה, שקיות אשפה קטנות, שקיות אשפה גדולות, כפפות ניקיון, מטאטא, יעה, מגב, סמרטוט רצפה, נוזל לחיטוי ידיים"],
+  ["Hygiene", "נייר והיגיינה", "🧴", 10.9, "נייר טואלט, טישו, מגבונים לחים, מגבונים אינטימיים, סבון ידיים, סבון גוף, שמפו, מרכך שיער, משחת שיניים, מברשות שיניים, מי פה, דאודורנט, סכיני גילוח, קצף גילוח, תחבושות היגייניות, טמפונים, פדים יומיים, קרם גוף, קרם ידיים"],
+  ["Storage", "חד פעמי ואחסון", "📦", 8.9, "צלחות חד פעמיות, כוסות חד פעמיות, סכו״ם חד פעמי, מפיות, נייר כסף, נייר אפייה, ניילון נצמד, שקיות אוכל, שקיות סנדוויץ׳, קופסאות אחסון, קופסאות חד פעמיות, תבניות אלומיניום, נרות שבת, גפרורים, מצת"],
+  ["Snacks", "נשנושים ומתוקים", "🍫", 6.9, "ביסלי, תפוצ׳יפס, דוריטוס, פופקורן, אגוזים, שקדים, גרעינים, חמוציות, שוקולד, חטיפי שוקולד, וופלים, עוגיות, עוגות אישיות, מסטיקים, סוכריות, חטיפי חלבון, חטיפי גרנולה"],
+];
+
+const BULK_PRICE_OVERRIDES = {
+  ביצים: 14.9,
+};
+
+const BULK_CATALOG_ITEMS = BULK_CATALOG_SECTIONS.flatMap(([category, brand, emoji, basePrice, rawItems], sectionIndex) =>
+  rawItems.split(", ").map((name, itemIndex) => ({
+    id: `bulk-${category}-${itemIndex}`,
+    upc: `7299${String(sectionIndex + 1).padStart(2, "0")}${String(itemIndex + 1).padStart(6, "0")}`,
+    name,
+    brand,
+    category,
+    price: BULK_PRICE_OVERRIDES[name] ?? Number((basePrice + (itemIndex % 7) * 1.3).toFixed(2)),
+    health: ["Cleaning", "Hygiene", "Storage"].includes(category) ? "B" : itemIndex % 5 === 0 ? "A" : "B",
+    dietary: ["Cleaning", "Hygiene", "Storage"].includes(category) ? ["Household"] : ["Vegetarian"],
+    image: produceImage(emoji),
+    alternative: null,
+  }))
+);
+
 const CATALOG = [
   {
     id: "milk-rami",
     upc: "7290116932033",
-    name: "חמאה תנובה",
+    name: "חמאה",
     brand: "Tnuva",
     category: "Dairy",
     price: 12.9,
@@ -45,7 +120,7 @@ const CATALOG = [
     price: 8.9,
     health: "C",
     dietary: ["Vegetarian"],
-    image: bambaImage,
+    image: produceImage("🍿"),
     alternative: {
       name: "SmartBrand פופקורן טבעי",
       price: 5.9,
@@ -57,8 +132,8 @@ const CATALOG = [
   {
     id: "pasta-local",
     upc: "7290017406374",
-    name: "Jasmin rice",
-    brand: "Rami Levy, רמי לוי",
+    name: "אורז יסמין",
+    brand: "רמי לוי",
     category: "Pantry",
     price: 11.9,
     health: "A",
@@ -69,7 +144,7 @@ const CATALOG = [
   {
     id: "soda-premium",
     upc: "7290000066332",
-    name: "Apropo",
+    name: "אפרופו",
     brand: "Osem, אסם",
     category: "Pantry",
     price: 9.9,
@@ -87,8 +162,8 @@ const CATALOG = [
   {
     id: "olive-oil",
     upc: "7290004125455",
-    name: "Original Sour Cream 15%",
-    brand: "Tnuva",
+    name: "שמנת חמוצה 15%",
+    brand: "תנובה",
     category: "Pantry",
     price: 10.9,
     health: "D",
@@ -106,7 +181,7 @@ const CATALOG = [
     id: "tomatoes",
     upc: "7290018564059",
     name: "שעועית ירוקה שלמה עדינה",
-    brand: "Rami Levy",
+    brand: "רמי לוי",
     category: "Produce",
     price: 12.4,
     health: "A",
@@ -114,37 +189,284 @@ const CATALOG = [
     image: greenBeansImage,
     alternative: null,
   },
+  {
+    id: "banana-loose",
+    upc: "PLU 4011",
+    name: "בננות טריות",
+    brand: "תוצרת טרייה",
+    category: "Produce",
+    price: 6.9,
+    health: "A",
+    dietary: ["Vegan", "Gluten-free", "Nut-free"],
+    image: produceImage("🍌"),
+    alternative: null,
+  },
+  {
+    id: "apple-red",
+    upc: "PLU 4017",
+    name: "תפוח אדום",
+    brand: "תוצרת טרייה",
+    category: "Produce",
+    price: 9.9,
+    health: "A",
+    dietary: ["Vegan", "Gluten-free", "Nut-free"],
+    image: produceImage("🍎"),
+    alternative: null,
+  },
+  {
+    id: "tomato-loose",
+    upc: "PLU 4664",
+    name: "עגבניות",
+    brand: "תוצרת טרייה",
+    category: "Produce",
+    price: 7.5,
+    health: "A",
+    dietary: ["Vegan", "Gluten-free", "Nut-free"],
+    image: produceImage("🍅"),
+    alternative: null,
+  },
+  {
+    id: "cucumber-loose",
+    upc: "PLU 4593",
+    name: "מלפפונים",
+    brand: "תוצרת טרייה",
+    category: "Produce",
+    price: 5.9,
+    health: "A",
+    dietary: ["Vegan", "Gluten-free", "Nut-free"],
+    image: produceImage("🥒"),
+    alternative: null,
+  },
+  {
+    id: "pepper-red",
+    upc: "PLU 4688",
+    name: "פלפל אדום",
+    brand: "תוצרת טרייה",
+    category: "Produce",
+    price: 11.9,
+    health: "A",
+    dietary: ["Vegan", "Gluten-free", "Nut-free"],
+    image: produceImage("🫑"),
+    alternative: null,
+  },
+  {
+    id: "carrot-loose",
+    upc: "PLU 4562",
+    name: "גזר",
+    brand: "תוצרת טרייה",
+    category: "Produce",
+    price: 4.9,
+    health: "A",
+    dietary: ["Vegan", "Gluten-free", "Nut-free"],
+    image: produceImage("🥕"),
+    alternative: null,
+  },
+  {
+    id: "potato-white",
+    upc: "PLU 4072",
+    name: "תפוחי אדמה לבנים",
+    brand: "תוצרת טרייה",
+    category: "Produce",
+    price: 4.5,
+    health: "B",
+    dietary: ["Vegan", "Gluten-free", "Nut-free"],
+    image: produceImage("🥔"),
+    alternative: null,
+  },
+  {
+    id: "onion-dry",
+    upc: "PLU 4665",
+    name: "בצל יבש",
+    brand: "תוצרת טרייה",
+    category: "Produce",
+    price: 3.9,
+    health: "A",
+    dietary: ["Vegan", "Gluten-free", "Nut-free"],
+    image: produceImage("🧅"),
+    alternative: null,
+  },
+  {
+    id: "cheese-cottage",
+    upc: "7290004125011",
+    name: "קוטג' 5%",
+    brand: "תנובה",
+    category: "Cheese",
+    price: 6.9,
+    health: "B",
+    dietary: ["Vegetarian", "Lactose"],
+    image: produceImage("🧀"),
+    alternative: {
+      name: "SmartBrand קוטג' 3%",
+      price: 5.8,
+      health: "A",
+      dietary: ["Vegetarian"],
+      insight: "חוסך ₪1.10 ומפחית אחוזי שומן בלי לוותר על חלבון.",
+    },
+  },
+  {
+    id: "cheese-yellow",
+    upc: "7290004125028",
+    name: "גבינה צהובה פרוסה 28%",
+    brand: "עמק",
+    category: "Cheese",
+    price: 18.9,
+    health: "C",
+    dietary: ["Vegetarian", "Lactose"],
+    image: produceImage("🧀"),
+    alternative: {
+      name: "גבינה צהובה 9% SmartBrand",
+      price: 15.9,
+      health: "B",
+      dietary: ["Vegetarian"],
+      insight: "חוסך ₪3.00 ומוריד שומן רווי בארוחות השבוע.",
+    },
+  },
+  {
+    id: "meat-chicken-breast",
+    upc: "7290012347115",
+    name: "חזה עוף טרי",
+    brand: "הקצבייה",
+    category: "Meat",
+    price: 34.9,
+    health: "A",
+    dietary: ["Gluten-free", "Nut-free"],
+    image: produceImage("🍗"),
+    alternative: null,
+  },
+  {
+    id: "meat-ground-beef",
+    upc: "7290012347122",
+    name: "בשר בקר טחון",
+    brand: "הקצבייה",
+    category: "Meat",
+    price: 42.9,
+    health: "C",
+    dietary: ["Gluten-free", "Nut-free"],
+    image: produceImage("🥩"),
+    alternative: {
+      name: "בקר טחון רזה 10%",
+      price: 39.9,
+      health: "B",
+      dietary: ["Gluten-free"],
+      insight: "חוסך ₪3.00 ומפחית שומן ביחס לבשר רגיל.",
+    },
+  },
+  {
+    id: "deli-turkey",
+    upc: "7290012347214",
+    name: "פסטרמה הודו דקיקה",
+    brand: "מעדנייה",
+    category: "Deli",
+    price: 16.9,
+    health: "C",
+    dietary: ["Gluten-free"],
+    image: produceImage("🥪"),
+    alternative: {
+      name: "פסטרמה מופחתת נתרן",
+      price: 15.5,
+      health: "B",
+      dietary: ["Gluten-free"],
+      insight: "חוסך ₪1.40 ומקטין צריכת נתרן בנשנושים וכריכים.",
+    },
+  },
+  {
+    id: "deli-salami",
+    upc: "7290012347221",
+    name: "נקניק סלמי פרוס",
+    brand: "מעדנייה",
+    category: "Deli",
+    price: 19.9,
+    health: "D",
+    dietary: ["Gluten-free"],
+    image: produceImage("🥓"),
+    alternative: {
+      name: "נקניק הודו מופחת שומן",
+      price: 17.9,
+      health: "C",
+      dietary: ["Gluten-free"],
+      insight: "חוסך ₪2.00 ומציע חלופה קלה יותר לכריכים.",
+    },
+  },
+  {
+    id: "cleaning-dish-soap",
+    upc: "7290012347313",
+    name: "סבון כלים לימון",
+    brand: "סנו",
+    category: "Cleaning",
+    price: 8.9,
+    health: "B",
+    dietary: ["Household"],
+    image: produceImage("🧽"),
+    alternative: {
+      name: "SmartBrand סבון כלים מרוכז",
+      price: 6.9,
+      health: "B",
+      dietary: ["Household"],
+      insight: "חוסך ₪2.00 ומתאים לקנייה חודשית קבועה.",
+    },
+  },
+  {
+    id: "cleaning-laundry-gel",
+    upc: "7290012347320",
+    name: "ג'ל כביסה 3 ליטר",
+    brand: "בדין",
+    category: "Cleaning",
+    price: 29.9,
+    health: "B",
+    dietary: ["Household"],
+    image: produceImage("🧴"),
+    alternative: {
+      name: "SmartBrand ג'ל כביסה חסכוני",
+      price: 23.9,
+      health: "B",
+      dietary: ["Household"],
+      insight: "חוסך ₪6.00 במוצר ניקיון שנקנה כמעט כל חודש.",
+    },
+  },
+  {
+    id: "cleaning-trash-bags",
+    upc: "7290012347337",
+    name: "שקיות אשפה חזקות",
+    brand: "ניקול",
+    category: "Cleaning",
+    price: 12.9,
+    health: "B",
+    dietary: ["Household"],
+    image: produceImage("🧻"),
+    alternative: null,
+  },
+  ...BULK_CATALOG_ITEMS,
 ];
 
 const TRIPS = [
   {
     id: "trip-1",
-    store: "Rami Levy",
-    date: "Today, 14:30",
+    store: "רמי לוי",
+    date: "היום, 14:30",
     purchases: 342,
     savings: 58,
     items: [
       ["במבה", 8.9, 3],
-      ["Jasmin rice", 11.9, 0],
+      ["אורז יסמין", 11.9, 0],
       ["שעועית ירוקה שלמה עדינה", 12.4, 0],
     ],
   },
   {
     id: "trip-2",
-    store: "Shufersal Deal",
-    date: "Yesterday, 09:15",
+    store: "שופרסל דיל",
+    date: "אתמול, 09:15",
     purchases: 418,
     savings: 42,
     items: [
-      ["Original Sour Cream 15%", 10.9, 3],
-      ["Apropo", 9.9, 3.5],
-      ["חמאה תנובה", 12.9, 3.5],
+      ["שמנת חמוצה 15%", 10.9, 3],
+      ["אפרופו", 9.9, 3.5],
+      ["חמאה", 12.9, 3.5],
     ],
   },
   {
     id: "trip-3",
-    store: "Victory",
-    date: "3 days ago",
+    store: "ויקטורי",
+    date: "לפני 3 ימים",
     purchases: 215,
     savings: 24,
     items: [
@@ -156,13 +478,13 @@ const TRIPS = [
 ];
 
 const CHART_DATA = [
-  { label: "Mon", purchases: 122, savings: 18 },
-  { label: "Tue", purchases: 188, savings: 32 },
-  { label: "Wed", purchases: 96, savings: 14 },
-  { label: "Thu", purchases: 242, savings: 45 },
-  { label: "Fri", purchases: 318, savings: 58 },
-  { label: "Sat", purchases: 408, savings: 76 },
-  { label: "Sun", purchases: 164, savings: 22 },
+  { label: "שני", purchases: 122, savings: 18 },
+  { label: "שלישי", purchases: 188, savings: 32 },
+  { label: "רביעי", purchases: 96, savings: 14 },
+  { label: "חמישי", purchases: 242, savings: 45 },
+  { label: "שישי", purchases: 318, savings: 58 },
+  { label: "שבת", purchases: 408, savings: 76 },
+  { label: "ראשון", purchases: 164, savings: 22 },
 ];
 
 const DEFAULT_PROFILE = {
@@ -181,7 +503,37 @@ const DEFAULT_PROFILE = {
   ],
 };
 
-const STORAGE_KEY = "smartcart-polished-state";
+const DEMO_USERS = [
+  {
+    id: "may",
+    label: "מאי כהן",
+    profile: DEFAULT_PROFILE,
+  },
+  {
+    id: "noa",
+    label: "נועה לוי",
+    profile: {
+      ...DEFAULT_PROFILE,
+      firstName: "נועה",
+      lastName: "לוי",
+      email: "noa.levi@smartcart.local",
+      address: "רחוב דיזנגוף 84, תל אביב",
+      budget: 950,
+      emoji: "😎",
+      avatarBg: "sky",
+      supermarket: "שופרסל",
+      restrictions: ["ללא גלוטן"],
+      household: [
+        { name: "נועה לוי", role: "מנהלת", badge: "שומרת התקציב" },
+        { name: "איתי לוי", role: "שותף", badge: "קונה קבוע" },
+      ],
+    },
+  },
+];
+
+const ACTIVE_USER_KEY = "smartcart-active-user";
+const LEGACY_STORAGE_KEY = "smartcart-polished-state";
+const storageKeyForUser = (userId) => `smartcart-polished-state-${userId}`;
 const RESTRICTIONS = ["טבעוני", "צמחוני", "ללא לקטוז", "ללא גלוטן", "ללא אגוזים"];
 const RESTRICTION_MATCH = {
   טבעוני: "Vegan",
@@ -193,67 +545,85 @@ const RESTRICTION_MATCH = {
 
 const STANDARD_BASKET = [
   { id: "weekly-dairy", label: "מוצר חלב שבועי", category: "Dairy", match: ["חמאה", "Sour Cream", "שמנת", "Milk"], cadence: "כל שבוע" },
-  { id: "pantry-base", label: "בסיס מזווה", category: "Pantry", match: ["Jasmin rice", "rice", "Pasta"], cadence: "פעמיים בחודש" },
+  { id: "pantry-base", label: "בסיס מזווה", category: "Pantry", match: ["אורז יסמין", "rice", "Pasta"], cadence: "פעמיים בחודש" },
   { id: "healthy-veg", label: "ירק/תוספת בריאה", category: "Produce", match: ["שעועית", "Tomatoes", "Produce"], cadence: "כל קנייה" },
-  { id: "snack-control", label: "נשנוש מבוקר", category: "Pantry", match: ["במבה", "Apropo", "Popcorn"], cadence: "לפי צורך" },
+  { id: "snack-control", label: "נשנוש מבוקר", category: "Pantry", match: ["במבה", "אפרופו", "Popcorn"], cadence: "לפי צורך" },
   { id: "smart-swap", label: "חלופת חיסכון", category: "Savings", match: ["SmartBrand"], cadence: "כשיש הצעה" },
 ];
 
-function loadState() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (parsed.profile?.firstName === "Karin" || parsed.profile?.email === "karin@smartcart.local") {
-        return {
-          ...parsed,
-          profile: {
-            ...DEFAULT_PROFILE,
-            ...parsed.profile,
-            firstName: DEFAULT_PROFILE.firstName,
-            lastName: DEFAULT_PROFILE.lastName,
-            email: DEFAULT_PROFILE.email,
-            address: DEFAULT_PROFILE.address,
-            emoji: parsed.profile.emoji || DEFAULT_PROFILE.emoji,
-            avatarBg: parsed.profile.avatarBg || DEFAULT_PROFILE.avatarBg,
-            budget: parsed.profile.budget || DEFAULT_PROFILE.budget,
-          },
-        };
-      }
-      return parsed;
-    }
-  } catch {
-    // Ignore corrupted client state and fall back to defaults.
-  }
+function createDefaultState(profile) {
   return {
     list: [
       { ...CATALOG[0], selectedName: CATALOG[0].name, selectedPrice: CATALOG[0].price, completed: false, swapped: false, saved: 0 },
       { ...CATALOG[5], selectedName: CATALOG[5].name, selectedPrice: CATALOG[5].price, completed: true, swapped: false, saved: 0 },
     ],
-    profile: DEFAULT_PROFILE,
+    profile,
   };
+}
+
+function getDemoProfile(userId) {
+  return DEMO_USERS.find((user) => user.id === userId)?.profile || DEFAULT_PROFILE;
+}
+
+function loadState(userId = "may") {
+  try {
+    const saved = localStorage.getItem(storageKeyForUser(userId)) || (userId === "may" ? localStorage.getItem(LEGACY_STORAGE_KEY) : null);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      const baseProfile = getDemoProfile(userId);
+      if (parsed.profile?.firstName === "Karin" || parsed.profile?.email === "karin@smartcart.local") {
+        return {
+          ...parsed,
+          profile: {
+            ...baseProfile,
+            ...parsed.profile,
+            firstName: baseProfile.firstName,
+            lastName: baseProfile.lastName,
+            email: baseProfile.email,
+            address: baseProfile.address,
+            emoji: parsed.profile.emoji || baseProfile.emoji,
+            avatarBg: parsed.profile.avatarBg || baseProfile.avatarBg,
+            budget: parsed.profile.budget || baseProfile.budget,
+          },
+        };
+      }
+      return {
+        ...parsed,
+        profile: {
+          ...baseProfile,
+          ...parsed.profile,
+        },
+      };
+    }
+  } catch {
+    // Ignore corrupted client state and fall back to defaults.
+  }
+  return createDefaultState(getDemoProfile(userId));
 }
 
 function App() {
   const [activeView, setActiveView] = useState("home");
-  const [state, setState] = useState(loadState);
+  const [activeUserId, setActiveUserId] = useState(() => localStorage.getItem(ACTIVE_USER_KEY) || "may");
+  const [state, setState] = useState(() => loadState(localStorage.getItem(ACTIVE_USER_KEY) || "may"));
   const [selectedId, setSelectedId] = useState(CATALOG[1].id);
   const [catalogOpen, setCatalogOpen] = useState(false);
   const [receipt, setReceipt] = useState(null);
   const [referralOpen, setReferralOpen] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [lightbox, setLightbox] = useState(null);
+  const [assistantOpen, setAssistantOpen] = useState(false);
   const [toast, setToast] = useState("");
 
   useEffect(() => {
     document.documentElement.lang = "he";
     document.documentElement.dir = "rtl";
-    document.title = "SmartCart | מאי כהן";
-  }, []);
+    document.title = `SmartCart | ${state.profile.firstName} ${state.profile.lastName}`;
+  }, [state.profile.firstName, state.profile.lastName]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }, [state]);
+    localStorage.setItem(storageKeyForUser(activeUserId), JSON.stringify(state));
+    localStorage.setItem(ACTIVE_USER_KEY, activeUserId);
+  }, [state, activeUserId]);
 
   useEffect(() => {
     if (!lightbox) return undefined;
@@ -282,6 +652,15 @@ function App() {
   function flash(message) {
     setToast(message);
     window.setTimeout(() => setToast(""), 2400);
+  }
+
+  function switchUser(userId) {
+    setActiveUserId(userId);
+    localStorage.setItem(ACTIVE_USER_KEY, userId);
+    setState(loadState(userId));
+    setActiveView("home");
+    const user = DEMO_USERS.find((item) => item.id === userId);
+    flash(`נכנסת כ${user ? ` ${user.label}` : ""}`);
   }
 
   function addItem(product, useAlternative = false) {
@@ -347,7 +726,7 @@ function App() {
     });
   }
 
-  function addHouseholdMember(name) {
+  function addHouseholdMember(name, role = "שותף/ה") {
     if (!name.trim()) return;
     setState((current) => ({
       ...current,
@@ -355,12 +734,12 @@ function App() {
         ...current.profile,
         household: [
           ...current.profile.household,
-          { name: name.trim(), role: "Contributor", badge: "New Shopper" },
+          { name: name.trim(), role, badge: "קונה חדש/ה" },
         ],
       },
     }));
     setInviteOpen(false);
-    flash("בן/בת משפחה נוספו לקניות");
+    flash("אדם חדש נוסף למשק הבית");
   }
 
   function handleReferral(email) {
@@ -387,7 +766,7 @@ function App() {
           {[
             ["home", "בית", "סקירה יומית"],
             ["setup", "הכנה", "בחירת סופר ותקציב"],
-            ["scanner", "סורק", "החלפות בזמן אמת"],
+            ["scanner", "סריקה", "החלפות בזמן אמת"],
             ["list", "רשימת קניות", "תקציב וצ'קליסט"],
             ["dashboard", "תובנות", "ניתוח חיסכון"],
             ["profile", "פרופיל", "העדפות הבית"],
@@ -411,13 +790,27 @@ function App() {
             <i style={{ width: `${progress}%` }} />
           </div>
         </div>
+
+        <div className="user-switcher">
+          <span>כניסה כמשתמש</span>
+          {DEMO_USERS.map((user) => (
+            <button
+              className={activeUserId === user.id ? "user-switch active" : "user-switch"}
+              key={user.id}
+              onClick={() => switchUser(user.id)}
+              type="button"
+            >
+              <b>{user.profile.emoji}</b>
+              <small>{user.label}</small>
+            </button>
+          ))}
+        </div>
       </aside>
 
       <main className="workspace">
         {activeView !== "home" && (
           <header className="topbar glass-panel">
             <div>
-              <p className="kicker">מצב קנייה מוכן לרמי לוי</p>
               <h1>{viewTitle(activeView)}</h1>
             </div>
             <div className="topbar-actions">
@@ -447,6 +840,7 @@ function App() {
         {activeView === "setup" && (
           <SetupView
             budget={state.profile.budget}
+            onSelectStore={(store) => updateProfile("supermarket", store)}
             onStart={() => setActiveView("scanner")}
             supermarket={state.profile.supermarket}
           />
@@ -519,6 +913,11 @@ function App() {
         onSubmit={addHouseholdMember}
       />
       <ImageLightbox image={lightbox} onClose={() => setLightbox(null)} />
+      <GuideAssistant
+        isOpen={assistantOpen}
+        onNavigate={setActiveView}
+        onToggle={() => setAssistantOpen((open) => !open)}
+      />
       {toast && <div className="toast">{toast}</div>}
     </div>
   );
@@ -563,10 +962,10 @@ function ScannerView({ product, selectedId, setSelectedId, restrictions, onAdd, 
         </div>
         <div className="pill-row">
           {product.dietary.map((tag) => (
-            <span className="diet-pill" key={tag}>{tag}</span>
+            <span className="diet-pill" key={tag}>{DIETARY_LABELS[tag] || tag}</span>
           ))}
           <span className={compatible ? "diet-pill success" : "diet-pill alert"}>
-            {compatible ? "Matches profile" : "Check restrictions"}
+            {compatible ? "תואם לפרופיל" : "בדקי התאמות"}
           </span>
         </div>
 
@@ -574,6 +973,9 @@ function ScannerView({ product, selectedId, setSelectedId, restrictions, onAdd, 
           <span>מחיר מקורי</span>
           <strong>₪{product.price.toFixed(2)}</strong>
         </div>
+        <small className="price-disclaimer scanner-disclaimer">
+          המחיר מבוסס על בדיקות אחרונות ועשוי להשתנות לפי סניף, מבצע, זמינות ועדכוני ספקים.
+        </small>
 
         {product.alternative && (
           <div className="swap-widget">
@@ -623,7 +1025,7 @@ function HomeView({ budget, spent, saved, progress, emoji, avatarBg, onCatalog, 
 
       <main className="home-content">
         <section className="home-greeting">
-          <h2>בוקר טוב, מאי!</h2>
+          <h2>שלום מאי</h2>
           <p>מוכנה לקנייה חכמה ומודעת היום?</p>
         </section>
 
@@ -645,9 +1047,12 @@ function HomeView({ budget, spent, saved, progress, emoji, avatarBg, onCatalog, 
           </div>
         </section>
 
-          <button className="home-primary-action" onClick={() => onNavigate("setup")} type="button">
+        <button className="home-primary-action" onClick={() => onNavigate("setup")} type="button">
           <span>🛒</span>
           התחילי קנייה
+        </button>
+        <button className="home-secondary-action" onClick={onCatalog} type="button">
+          + פתחי קטלוג והוסיפי מוצר
         </button>
 
         <section className="home-quick-grid">
@@ -731,7 +1136,7 @@ function SmartLearningList({ learning, onOpenList, onOpenInsights }) {
       </div>
 
       <div className="learning-summary">
-        <span>קטגוריה מובילה: <b>{learning.favoriteCategory}</b></span>
+        <span>קטגוריה מובילה: <b>{learning.favoriteCategoryLabel}</b></span>
         <span>המערכת זיהתה <b>{learning.swapRate}%</b> נטייה להחלפות חיסכון</span>
         <span>חיסכון צפוי לקנייה הבאה: <b>₪{learning.projectedSavings}</b></span>
       </div>
@@ -739,11 +1144,27 @@ function SmartLearningList({ learning, onOpenList, onOpenInsights }) {
   );
 }
 
-function SetupView({ budget, supermarket, onStart }) {
+function SetupView({ budget, supermarket, onSelectStore, onStart }) {
   const stores = [
     ["שופרסל", "0.4 ק״מ", "shopping_cart"],
-    [supermarket || "רמי לוי", "1.2 ק״מ", "local_mall"],
-    ["סופר-פארם", "0.8 ק״מ", "medication"],
+    ["רמי לוי", "1.2 ק״מ", "local_mall"],
+    ["יוחננוף", "1.5 ק״מ", "shopping_cart"],
+    ["ויקטורי", "1.8 ק״מ", "shopping_cart"],
+    ["קרפור", "2.0 ק״מ", "shopping_cart"],
+    ["יינות ביתן", "2.3 ק״מ", "shopping_cart"],
+    ["מגה בעיר", "2.5 ק״מ", "shopping_cart"],
+    ["מחסני השוק", "2.8 ק״מ", "shopping_cart"],
+    ["חצי חינם", "3.0 ק״מ", "shopping_cart"],
+    ["אושר עד", "3.4 ק״מ", "shopping_cart"],
+    ["טיב טעם", "3.6 ק״מ", "shopping_cart"],
+    ["קשת טעמים", "3.9 ק״מ", "shopping_cart"],
+    ["פרשמרקט", "4.1 ק״מ", "shopping_cart"],
+    ["בר כל", "4.3 ק״מ", "shopping_cart"],
+    ["יש חסד", "4.5 ק״מ", "shopping_cart"],
+    ["AM:PM", "0.7 ק״מ", "shopping_cart"],
+    ["סופר יודה", "1.0 ק״מ", "shopping_cart"],
+    ["yellow", "1.6 ק״מ", "shopping_cart"],
+    ["סיטי מרקט", "2.2 ק״מ", "shopping_cart"],
     ["הוספת סופר", "מיקום ידני", "add"],
   ];
 
@@ -763,13 +1184,18 @@ function SetupView({ budget, supermarket, onStart }) {
           <input placeholder="חיפוש סופר..." />
           <div className="store-grid">
             {stores.map(([name, distance, icon], index) => (
-              <button className={index === 0 ? "store-option selected" : "store-option"} key={name} type="button">
+              <button
+                className={name === supermarket ? "store-option selected" : "store-option"}
+                key={name}
+                onClick={() => icon !== "add" && onSelectStore(name)}
+                type="button"
+              >
                 <span>{icon === "add" ? "+" : "🛒"}</span>
                 <div>
                   <strong>{name}</strong>
                   <small>{distance}</small>
                 </div>
-                {index === 0 && <b>✓</b>}
+                {name === supermarket && <b>✓</b>}
               </button>
             ))}
           </div>
@@ -948,8 +1374,8 @@ function ProfileView({ profile, onUpdate, onToggleRestriction, onInvite }) {
         <div className="avatar-picker">
           <div className={`avatar-orb avatar-bg-${profile.avatarBg || "mint"}`}>{profile.emoji || "😊"}</div>
           <div className="avatar-builder">
-            <p>בחירת פנים לאווטאר</p>
-            <div className="emoji-options" aria-label="בחירת פנים לאווטאר">
+            <p>בחירת אווטאר</p>
+            <div className="emoji-options" aria-label="בחירת אווטאר">
               {faceOptions.map((emoji) => (
                 <button
                   className={profile.emoji === emoji ? "emoji-option active" : "emoji-option"}
@@ -1015,7 +1441,7 @@ function ProfileView({ profile, onUpdate, onToggleRestriction, onInvite }) {
 
         <div className="household-head">
           <h2>משק בית</h2>
-          <button className="ghost-button" onClick={onInvite} type="button">הזמנה</button>
+          <button className="primary-button" onClick={onInvite} type="button">+ הוספת אדם</button>
         </div>
         {profile.household.map((member) => (
           <div className="member-row" key={member.name}>
@@ -1031,11 +1457,36 @@ function ProfileView({ profile, onUpdate, onToggleRestriction, onInvite }) {
 function CatalogDrawer({ isOpen, onClose, onAdd }) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
+  const [manualName, setManualName] = useState("");
+  const [manualPrice, setManualPrice] = useState("");
+  const [manualCategory, setManualCategory] = useState("Pantry");
+  const categories = ["All", ...new Set(CATALOG.map((item) => item.category))].map((key) => [key, CATEGORY_LABELS[key] || key]);
+  const categoryOptions = categories.filter(([key]) => key !== "All");
   const filtered = CATALOG.filter((item) => {
     const matchesCategory = category === "All" || item.category === category;
-    const matchesQuery = item.name.toLowerCase().includes(query.toLowerCase());
+    const haystack = `${item.name} ${item.brand} ${item.category}`.toLowerCase();
+    const matchesQuery = haystack.includes(query.toLowerCase());
     return matchesCategory && matchesQuery;
   });
+  const addManualProduct = () => {
+    const name = manualName.trim();
+    const price = Number(manualPrice);
+    if (!name || Number.isNaN(price) || price <= 0) return;
+    onAdd({
+      id: `manual-${Date.now()}`,
+      upc: "ידני",
+      name,
+      brand: "מוצר שהוסף ידנית",
+      category: manualCategory,
+      price,
+      health: "B",
+      dietary: ["Vegetarian"],
+      image: produceImage("🛒"),
+      alternative: null,
+    }, false);
+    setManualName("");
+    setManualPrice("");
+  };
   return (
     <div className={isOpen ? "drawer-backdrop open" : "drawer-backdrop"} onClick={onClose}>
       <aside className="drawer glass-panel" onClick={(event) => event.stopPropagation()}>
@@ -1048,18 +1499,39 @@ function CatalogDrawer({ isOpen, onClose, onAdd }) {
         </div>
         <input placeholder="חיפוש בקטלוג" value={query} onChange={(event) => setQuery(event.target.value)} />
         <div className="tag-selector">
-          {["All", "Produce", "Dairy", "Pantry", "Drinks"].map((tag) => (
+          {categories.map(([tag, label]) => (
             <button className={category === tag ? "tag active" : "tag"} key={tag} onClick={() => setCategory(tag)} type="button">
-              {tag}
+              {label}
             </button>
           ))}
+        </div>
+        <div className="manual-product-form">
+          <div>
+            <p className="kicker">הוספה ידנית</p>
+            <h3>מוצר שלא קיים בקטלוג</h3>
+          </div>
+          <input placeholder="שם מוצר" value={manualName} onChange={(event) => setManualName(event.target.value)} />
+          <div className="manual-product-row">
+            <input min="0" placeholder="מחיר" step="0.1" type="number" value={manualPrice} onChange={(event) => setManualPrice(event.target.value)} />
+            <select value={manualCategory} onChange={(event) => setManualCategory(event.target.value)}>
+              {categoryOptions.map(([key, label]) => (
+                <option key={key} value={key}>{label}</option>
+              ))}
+            </select>
+          </div>
+          <button className="primary-button" disabled={!manualName.trim() || Number(manualPrice) <= 0} onClick={addManualProduct} type="button">
+            הוספת מוצר חדש
+          </button>
+          <small className="price-disclaimer">
+            המחיר שמופיע באתר מבוסס על בדיקות אחרונות ועשוי להיות שונה מהמחיר האמיתי בשוק בגלל מבצעים, סניפים, זמינות, עדכוני ספקים וסיבות נוספות.
+          </small>
         </div>
         <div className="drawer-list">
           {filtered.map((item) => (
             <article key={item.id}>
               <div>
                 <strong>{item.name}</strong>
-              <span>{item.category} - ₪{item.price.toFixed(2)}</span>
+              <span>{CATEGORY_LABELS[item.category] || item.category} - ₪{item.price.toFixed(2)}</span>
               </div>
               <button onClick={() => onAdd(item, false)} type="button">הוספה</button>
             </article>
@@ -1120,15 +1592,22 @@ function ReferralModal({ isOpen, onClose, onSubmit }) {
 
 function InviteModal({ isOpen, onClose, onSubmit }) {
   const [name, setName] = useState("");
+  const [role, setRole] = useState("שותף/ה");
   if (!isOpen) return null;
   return (
     <div className="modal-backdrop">
       <div className="modal-card glass-panel">
         <button className="icon-button" onClick={onClose} type="button">X</button>
-        <p className="kicker">חיבור משפחתי</p>
-        <h2>הוספת קונה למשפחה</h2>
-        <input placeholder="שם בן/בת משפחה" value={name} onChange={(event) => setName(event.target.value)} />
-        <button className="primary-button" onClick={() => onSubmit(name)} type="button">יצירת כרטיס הזמנה</button>
+        <p className="kicker">משק בית משותף</p>
+        <h2>הוספת אדם</h2>
+        <input placeholder="שם מלא" value={name} onChange={(event) => setName(event.target.value)} />
+        <select value={role} onChange={(event) => setRole(event.target.value)}>
+          <option value="שותף/ה">שותף/ה</option>
+          <option value="מנהל/ת">מנהל/ת</option>
+          <option value="קונה קבוע/ה">קונה קבוע/ה</option>
+          <option value="ילד/ה">ילד/ה</option>
+        </select>
+        <button className="primary-button" onClick={() => onSubmit(name, role)} type="button">הוספה למשק הבית</button>
       </div>
     </div>
   );
@@ -1162,6 +1641,221 @@ function CachedImage({ src, alt, onLightbox }) {
   );
 }
 
+function GuideAssistant({ isOpen, onToggle, onNavigate }) {
+  const [question, setQuestion] = useState("");
+  const [thinking, setThinking] = useState(false);
+  const [messages, setMessages] = useState([
+    {
+      from: "bot",
+      text: "היי, אני העוזר של SmartCart. אפשר לשאול אותי איך מתחילים קנייה, איך מוסיפים מוצר, איך משתמשים בסורק, איפה רואים תקציב או איך משנים פרופיל.",
+    },
+  ]);
+
+  const quickActions = [
+    ["איך מתחילים?", "setup"],
+    ["איך מוסיפים מוצר?", "list"],
+    ["איך סורקים?", "scanner"],
+    ["מה זה התובנות ולמה הן משמשות?", "dashboard"],
+  ];
+
+  async function ask(text = question) {
+    const clean = text.trim();
+    if (!clean || thinking) return;
+    const fallbackAnswer = getAssistantAnswer(clean);
+    setMessages((current) => [
+      ...current,
+      { from: "user", text: clean },
+    ]);
+    setQuestion("");
+    setThinking(true);
+    window.setTimeout(async () => {
+      const apiAnswer = await getApiAssistantAnswer(clean, messages);
+      const finalAnswer = apiAnswer || fallbackAnswer.text;
+      setMessages((current) => [...current, { from: "bot", text: finalAnswer }]);
+      setThinking(false);
+      if (fallbackAnswer.view) onNavigate(fallbackAnswer.view);
+    }, 650);
+  }
+
+  return (
+    <div className="guide-assistant" dir="rtl">
+      {isOpen && (
+        <section className="guide-panel glass-panel" aria-label="עוזר SmartCart">
+          <div className="guide-head">
+            <div>
+              <strong>עוזר SmartCart</strong>
+              <small>הדרכה ושאלות למשתמשים חדשים</small>
+            </div>
+            <span className="ai-badge">מבוסס AI</span>
+            <button className="icon-button" onClick={onToggle} type="button">X</button>
+          </div>
+          <small className="assistant-note">
+            העוזר יכול לטעות. מומלץ לבדוק מחירים, מבצעים ומידע תזונתי מול הסופר והמוצר בפועל.
+          </small>
+
+          <div className="guide-messages">
+            {messages.map((message, index) => (
+              <p className={message.from === "bot" ? "guide-message bot" : "guide-message user"} key={`${message.from}-${index}`}>
+                {message.text}
+              </p>
+            ))}
+            {thinking && (
+              <p className="guide-message bot thinking">
+                <span />
+                <span />
+                <span />
+                חושב רגע...
+              </p>
+            )}
+          </div>
+
+          <div className="guide-quick-actions">
+            {quickActions.map(([label, view]) => (
+              <button
+                key={label}
+                onClick={() => {
+                  onNavigate(view);
+                  ask(label);
+                }}
+                type="button"
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          <form
+            className="guide-form"
+            onSubmit={(event) => {
+              event.preventDefault();
+              ask();
+            }}
+          >
+            <input
+              placeholder="שאלי אותי משהו..."
+              disabled={thinking}
+              value={question}
+              onChange={(event) => setQuestion(event.target.value)}
+            />
+            <button disabled={thinking} type="submit">{thinking ? "חושב..." : "שליחה"}</button>
+          </form>
+        </section>
+      )}
+
+      <button className="guide-fab" onClick={onToggle} type="button" aria-label="פתיחת עוזר SmartCart">
+        <span className="help-mark" aria-hidden="true">?</span>
+      </button>
+    </div>
+  );
+}
+
+async function getApiAssistantAnswer(question, history) {
+  try {
+    const response = await fetch("/api/assistant", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question, history }),
+    });
+    if (!response.ok) return null;
+    const data = await response.json();
+    return data.answer || null;
+  } catch {
+    return null;
+  }
+}
+
+function getAssistantAnswer(question) {
+  const text = question.toLowerCase();
+  if (text.includes("שלום") || text.includes("היי") || text.includes("הי ") || text.includes("בוקר טוב") || text.includes("ערב טוב")) {
+    return {
+      view: null,
+      text: "היי מאי, איזה כיף שאת כאן. אני העוזר של SmartCart ואפשר לשאול אותי גם על האתר וגם סתם איך להתחיל להשתמש בו.",
+    };
+  }
+  if (text.includes("מה קורה") || text.includes("מה נשמע") || text.includes("מה שלומך") || text.includes("איך אתה") || text.includes("איך את")) {
+    return {
+      view: null,
+      text: "הכול טוב, תודה ששאלת. אני כאן כדי לעזור לך לעשות קנייה חכמה יותר, למצוא מוצרים, להבין תובנות ולשמור על התקציב.",
+    };
+  }
+  if (text.includes("תודה") || text.includes("תודה רבה") || text.includes("אלופה") || text.includes("מעולה")) {
+    return {
+      view: null,
+      text: "בשמחה. אני נשאר כאן אם תרצי עוד עזרה, הסבר על מסך מסוים או הכוונה בקנייה.",
+    };
+  }
+  if (text.includes("מי אתה") || text.includes("מי את") || text.includes("מה אתה") || text.includes("מה את")) {
+    return {
+      view: null,
+      text: "אני עוזר ההדרכה של SmartCart. אני מסביר איך להשתמש באתר, עוזר למצוא פעולות, ומכוון אותך למסך הנכון לפי השאלה.",
+    };
+  }
+  if (text.includes("מה אפשר לשאול") || text.includes("מה אתה יודע") || text.includes("עזרה") || text.includes("help")) {
+    return {
+      view: null,
+      text: "אפשר לשאול אותי על התחלת קנייה, בחירת סופר, סריקת מוצר, הוספת מוצר ידנית, תקציב, רשימת קניות, תובנות, פרופיל, אווטאר ומשק בית.",
+    };
+  }
+  if (text.includes("למה") && text.includes("smartcart")) {
+    return {
+      view: null,
+      text: "SmartCart נועדה לעזור לך לקנות בצורה מודעת: להבין כמה את מוציאה, לבחור חלופות משתלמות, ולבנות רשימת קניות שמתאימה להרגלים של הבית.",
+    };
+  }
+  if (text.includes("התח") || text.includes("קנייה") || text.includes("סופר")) {
+    return {
+      view: "setup",
+      text: "כדי להתחיל קנייה לוחצים על 'התחילי קנייה', בוחרים סופר, מגדירים תקציב וזמן, ואז ממשיכים לסריקה.",
+    };
+  }
+  if (text.includes("סריק") || text.includes("ברקוד") || text.includes("מוצר לדימוי")) {
+    return {
+      view: "scanner",
+      text: "בעמוד סריקה בוחרים מוצר מהרשימה המדומה. מיד רואים מחיר, דירוג בריאות, התאמה לפרופיל והצעת החלפה אם קיימת.",
+    };
+  }
+  if (text.includes("קטלוג") || text.includes("להוסיף מוצר") || text.includes("הוספה") || text.includes("מוצר חדש")) {
+    return {
+      view: "list",
+      text: "כדי להוסיף מוצר פותחים קטלוג, מחפשים מוצר ולוחצים 'הוספה'. אם המוצר לא קיים, יש אזור 'הוספה ידנית' שבו מכניסים שם, מחיר וקטגוריה.",
+    };
+  }
+  if (text.includes("תקציב") || text.includes("מחיר") || text.includes("חריגה") || text.includes("נשאר")) {
+    return {
+      view: "list",
+      text: "התקציב מופיע בסרגל הצד וברשימת הקניות. אם הקנייה מתקרבת ל-85% מהתקציב, המערכת מסמנת אזהרה ומדגישה את מצב התקציב.",
+    };
+  }
+  if (text.includes("רשימה") || text.includes("צ׳ק") || text.includes("סימון")) {
+    return {
+      view: "list",
+      text: "ברשימת הקניות אפשר לסמן מוצרים שנקנו, למחוק מוצרים, לראות קטגוריות ולבדוק כמה נשאר בתקציב.",
+    };
+  }
+  if (text.includes("תובנות") || text.includes("חיסכון") || text.includes("גרף") || text.includes("קבלה")) {
+    return {
+      view: "dashboard",
+      text: "התובנות הן אזור שמנתח את הקניות שלך: כמה הוצאת, כמה חסכת, אילו החלפות משתלמות עשית ומה אפשר לשפר בקנייה הבאה. הן עוזרות להבין את הרגלי הקנייה ולשלוט טוב יותר בתקציב.",
+    };
+  }
+  if (text.includes("פרופיל") || text.includes("אווטאר") || text.includes("תזונה") || text.includes("משק בית")) {
+    return {
+      view: "profile",
+      text: "בפרופיל אפשר לערוך שם, אימייל, כתובת, תקציב, סופר מועדף, לבחור אווטאר, להגדיר העדפות תזונה ולהוסיף אנשים למשק הבית.",
+    };
+  }
+  if (text.includes("החלפה") || text.includes("swap") || text.includes("בריא") || text.includes("זול")) {
+    return {
+      view: "scanner",
+      text: "כאשר למוצר יש חלופה, SmartCart מציגה כרטיס 'נסי את זה במקום' עם מחיר חדש, דירוג בריאות וחיסכון צפוי. אפשר לבחור 'החלפה וחיסכון'.",
+    };
+  }
+  return {
+    view: null,
+    text: "אפשר לשאול אותי על התחלת קנייה, סריקה, קטלוג, הוספת מוצר, תקציב, רשימת קניות, תובנות או פרופיל. למשל: 'איך מוסיפים מוצר חדש?'",
+  };
+}
+
 function ImageLightbox({ image, onClose }) {
   if (!image) return null;
   return (
@@ -1187,7 +1881,7 @@ function viewTitle(activeView) {
     case "profile":
       return "פרופיל חכם";
     default:
-      return "סורק";
+      return "סריקה";
   }
 }
 
@@ -1197,6 +1891,7 @@ function buildLearningModel(list, budget) {
     return totals;
   }, {});
   const favoriteCategory = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1])[0]?.[0] || "Pantry";
+  const favoriteCategoryLabel = CATEGORY_LABELS[favoriteCategory] || favoriteCategory;
   const swappedCount = list.filter((item) => item.swapped).length;
   const swapRate = list.length ? Math.round((swappedCount / list.length) * 100) : 0;
   const averageSavings = list.length
@@ -1225,6 +1920,7 @@ function buildLearningModel(list, budget) {
   return {
     budgetShare,
     favoriteCategory,
+    favoriteCategoryLabel,
     projectedSavings,
     standardBasket,
     swapRate,
@@ -1236,7 +1932,7 @@ function buildLearningModel(list, budget) {
       },
       {
         label: "קטגוריה חוזרת",
-        value: favoriteCategory,
+        value: favoriteCategoryLabel,
         detail: "הקטגוריה שמופיעה הכי הרבה בקניות הנוכחיות",
       },
       {
