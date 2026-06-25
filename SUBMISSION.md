@@ -4,7 +4,7 @@
 
 - Live Vercel production URL: https://smartcart-project-ruddy.vercel.app
 - GitHub repository: https://github.com/mimi5588/smartcart-project
-- Supabase project: `smartcart-project` (`uyvptavudduzlsxkmtwa`)
+- Supabase project: configured via environment variables
 - Deployment status document: [DEPLOYMENT_STATUS.md](./DEPLOYMENT_STATUS.md)
 - ERD document: [SUPABASE_ERD.md](./SUPABASE_ERD.md)
 
@@ -60,4 +60,3 @@ Optional for the assistant API:
 - `npm run lint` passes.
 - `npm audit --omit=dev` reports 0 production vulnerabilities.
 - Vercel production runtime logs had no `error` or `fatal` entries in the last check.
-
