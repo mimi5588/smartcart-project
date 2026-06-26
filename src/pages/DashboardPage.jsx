@@ -2,9 +2,9 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 
 const trips = [
-  { store: "Rami Levy", date: "Today", spent: "₪142", saved: "₪24" },
-  { store: "Shufersal Deal", date: "Yesterday", spent: "₪384", saved: "₪42" },
-  { store: "Victory", date: "3 days ago", spent: "₪215", saved: "₪18" },
+  { store: "רמי לוי", date: "היום", spent: "₪142", saved: "₪24" },
+  { store: "שופרסל דיל", date: "אתמול", spent: "₪384", saved: "₪42" },
+  { store: "ויקטורי", date: "לפני 3 ימים", spent: "₪215", saved: "₪18" },
 ];
 
 const chartBars = [44, 68, 52, 76, 61, 84, 72];
@@ -16,36 +16,36 @@ function DashboardPage() {
 
       <main className="page-shell">
         <section className="page-header">
-          <p className="eyebrow">Shopping insights</p>
-          <h1>Dashboard</h1>
+          <p className="eyebrow">תובנות קנייה</p>
+          <h1>לוח חיסכון</h1>
           <p>
-            Track monthly spending, savings from smart swaps, and your recent
-            shopping trips in one focused view.
+            מעקב אחר הוצאות חודשיות, חיסכון מהחלפות חכמות וקניות אחרונות
+            בתצוגה אחת ברורה.
           </p>
         </section>
 
         <section className="stats-grid">
           <article className="metric-card">
-            <span>Monthly budget</span>
+            <span>תקציב חודשי</span>
             <strong>₪1,200</strong>
-            <p>₪842 remaining</p>
+            <p>נותרו ₪842</p>
           </article>
           <article className="metric-card">
-            <span>Total saved</span>
+            <span>סך החיסכון</span>
             <strong>₪84</strong>
-            <p>12% better than last month</p>
+            <p>12% יותר מהחודש הקודם</p>
           </article>
           <article className="metric-card">
-            <span>Healthy swaps</span>
+            <span>החלפות בריאות</span>
             <strong>7</strong>
-            <p>4 cheaper alternatives accepted</p>
+            <p>4 חלופות זולות יותר נבחרו</p>
           </article>
         </section>
 
         <section className="dashboard-grid">
           <div className="content-card">
-            <h2>Weekly savings</h2>
-            <div className="bar-chart" aria-label="Weekly savings chart">
+            <h2>חיסכון שבועי</h2>
+            <div className="bar-chart" aria-label="גרף חיסכון שבועי">
               {chartBars.map((height, index) => (
                 <span key={index} style={{ height: `${height}%` }} />
               ))}
@@ -53,7 +53,7 @@ function DashboardPage() {
           </div>
 
           <div className="content-card">
-            <h2>Recent trips</h2>
+            <h2>קניות אחרונות</h2>
             <div className="stack-list">
               {trips.map((trip) => (
                 <article className="list-row" key={`${trip.store}-${trip.date}`}>
@@ -62,7 +62,7 @@ function DashboardPage() {
                     <span>{trip.date}</span>
                   </div>
                   <b>{trip.spent}</b>
-                  <em>Saved {trip.saved}</em>
+                  <em>נחסכו {trip.saved}</em>
                 </article>
               ))}
             </div>

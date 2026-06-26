@@ -1,10 +1,10 @@
 import { NavLink } from "react-router-dom";
 
 const navItems = [
-  { label: "Home", path: "/" },
-  { label: "Scan", path: "/scan" },
-  { label: "Dashboard", path: "/dashboard" },
-  { label: "Profile", path: "/profile" },
+  { label: "בית", path: "/" },
+  { label: "סריקה", path: "/scan" },
+  { label: "תובנות", path: "/dashboard" },
+  { label: "פרופיל", path: "/profile" },
 ];
 
 function Navbar() {

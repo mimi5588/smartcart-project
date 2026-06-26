@@ -31,9 +31,8 @@
 
 | Service | Type | Role in the product | Required for core demo |
 | --- | --- | --- | --- |
-| Vercel | Hosting / deployment | Hosts the production React/Vite app and serverless API route. | Yes |
+| Vercel | Hosting / deployment | Hosts the production React/Vite app. | Yes |
 | Supabase | Auth / Database / Data API | Handles email/password auth and stores user profiles/state with RLS. | Yes |
-| OpenAI API | AI API | Optional in-app assistant responses through `api/assistant.js`. The app has local fallback answers if the key is missing. | No |
 | Browser Cache Storage API | Browser API | Caches external HTTP images when relevant for faster reloads. | No |
 | Recharts | UI library | Renders spending and savings charts in the insights dashboard. | Yes |
 
@@ -43,11 +42,6 @@ Configured in Vercel for Production, Preview, and Development:
 
 - `VITE_SUPABASE_URL`
 - `VITE_SUPABASE_PUBLISHABLE_KEY`
-
-Optional for the assistant API:
-
-- `OPENAI_API_KEY`
-- `OPENAI_MODEL`
 
 ## Verification checklist
 

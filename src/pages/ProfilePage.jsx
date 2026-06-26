@@ -1,10 +1,10 @@
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 
-const preferences = ["Budget alerts", "Healthy alternatives", "Store-brand swaps"];
+const preferences = ["התראות תקציב", "חלופות בריאות", "החלפות למותג זול"];
 const members = [
-  { name: "Karin", role: "Admin" },
-  { name: "David", role: "Contributor" },
+  { name: "מאי כהן", role: "מנהלת" },
+  { name: "דוד כהן", role: "שותף" },
 ];
 
 function ProfilePage() {
@@ -14,26 +14,26 @@ function ProfilePage() {
 
       <main className="page-shell">
         <section className="profile-hero">
-          <div className="avatar">K</div>
+          <div className="avatar">מ</div>
           <div>
-            <p className="eyebrow">Account profile</p>
-            <h1>Karin Miller</h1>
-            <p>SmartCart member since 2026</p>
+            <p className="eyebrow">פרופיל משתמש</p>
+            <h1>מאי כהן</h1>
+            <p>משתמשת SmartCart משנת 2026</p>
           </div>
         </section>
 
         <section className="dashboard-grid">
           <div className="content-card">
-            <h2>Shopping budget</h2>
+            <h2>תקציב קניות</h2>
             <div className="budget-settings">
-              <label htmlFor="monthly-budget">Monthly limit</label>
+              <label htmlFor="monthly-budget">מגבלה חודשית</label>
               <input id="monthly-budget" defaultValue="₪1,200" />
-              <button type="button">Save budget</button>
+              <button type="button">שמירת תקציב</button>
             </div>
           </div>
 
           <div className="content-card">
-            <h2>Preferences</h2>
+            <h2>העדפות</h2>
             <div className="chip-list">
               {preferences.map((preference) => (
                 <span key={preference}>{preference}</span>
@@ -42,7 +42,7 @@ function ProfilePage() {
           </div>
 
           <div className="content-card">
-            <h2>Household</h2>
+            <h2>משק בית</h2>
             <div className="stack-list">
               {members.map((member) => (
                 <article className="list-row" key={member.name}>
@@ -50,26 +50,26 @@ function ProfilePage() {
                     <strong>{member.name}</strong>
                     <span>{member.role}</span>
                   </div>
-                  <b>Active</b>
+                  <b>פעיל</b>
                 </article>
               ))}
             </div>
           </div>
 
           <div className="content-card">
-            <h2>Notifications</h2>
+            <h2>התראות</h2>
             <div className="settings-list">
               <label>
                 <input defaultChecked type="checkbox" />
-                Price-drop alerts
+                התראות ירידת מחיר
               </label>
               <label>
                 <input defaultChecked type="checkbox" />
-                Monthly budget warning
+                אזהרת תקציב חודשית
               </label>
               <label>
                 <input type="checkbox" />
-                Weekly summary email
+                סיכום שבועי במייל
               </label>
             </div>
           </div>

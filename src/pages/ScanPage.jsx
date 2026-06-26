@@ -2,9 +2,9 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 
 const scannedItems = [
-  { name: "Organic Milk", price: "₪14.90", note: "Store brand saves ₪3.50" },
-  { name: "Whole Wheat Bread", price: "₪12.00", note: "Already in your list" },
-  { name: "Fresh Spinach", price: "₪8.50", note: "Healthy choice" },
+  { name: "חלב אורגני", price: "₪14.90", note: "מותג הסופר חוסך ₪3.50" },
+  { name: "לחם מחיטה מלאה", price: "₪12.00", note: "כבר נמצא ברשימה שלך" },
+  { name: "תרד טרי", price: "₪8.50", note: "בחירה בריאה" },
 ];
 
 function ScanPage() {
@@ -14,11 +14,11 @@ function ScanPage() {
 
       <main className="page-shell">
         <section className="page-header">
-          <p className="eyebrow">Barcode scanner</p>
-          <h1>Scan products while you shop</h1>
+          <p className="eyebrow">סורק ברקוד</p>
+          <h1>סריקת מוצרים בזמן הקנייה</h1>
           <p>
-            Keep your cart updated in real time, compare prices, and catch
-            cheaper alternatives before checkout.
+            עדכני את העגלה בזמן אמת, השווי מחירים וקבלי חלופות זולות יותר
+            לפני הקופה.
           </p>
         </section>
 
@@ -30,20 +30,20 @@ function ScanPage() {
               <span className="scanner-corner scanner-corner-top-right" />
               <span className="scanner-corner scanner-corner-bottom-left" />
               <span className="scanner-corner scanner-corner-bottom-right" />
-              <strong>Align barcode here</strong>
+              <strong>מקמי כאן את הברקוד</strong>
             </div>
 
             <div className="manual-entry">
-              <label htmlFor="barcode">Manual barcode</label>
+              <label htmlFor="barcode">ברקוד ידני</label>
               <div>
                 <input id="barcode" placeholder="7290000000000" />
-                <button type="button">Add</button>
+                <button type="button">הוספה</button>
               </div>
             </div>
           </div>
 
           <div className="content-card">
-            <h2>Latest scans</h2>
+            <h2>סריקות אחרונות</h2>
             <div className="stack-list">
               {scannedItems.map((item) => (
                 <article className="list-row" key={item.name}>

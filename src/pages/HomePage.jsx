@@ -13,8 +13,8 @@ function HomePage() {
         className="home-hero"
         style={{ backgroundImage: `url(${supermarketBackground})` }}
       >
-        <p className="eyebrow">Smart shopping assistant</p>
-        <h1>שלום קארין 👋</h1>
+        <p className="eyebrow">עוזרת קניות חכמה</p>
+        <h1>שלום מאי</h1>
         <p>ברוכה הבאה ל־SmartCart</p>
 
         <div className="budget-card">

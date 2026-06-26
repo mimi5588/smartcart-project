@@ -676,7 +676,7 @@ function App() {
       })
       .catch((error) => {
         if (!cancelled) {
-          setAuthError(error.message || "Failed to load your SmartCart account.");
+          setAuthError(error.message || "טעינת חשבון SmartCart נכשלה.");
           remoteReadyRef.current = true;
           syncStatusRef.current = "offline";
         }
@@ -722,7 +722,8 @@ function App() {
   const selectedProduct = CATALOG.find((item) => item.id === selectedId) || CATALOG[0];
   const spent = state.list.reduce((sum, item) => sum + item.selectedPrice, 0);
   const saved = state.list.reduce((sum, item) => sum + item.saved, 0);
-  const progress = Math.min(100, Math.round((spent / state.profile.budget) * 100));
+  const activeBudget = Math.max(1, Number(state.profile.budget) || 1);
+  const progress = Math.min(100, Math.round((spent / activeBudget) * 100));
   const warning = progress >= 85;
   const learning = useMemo(() => buildLearningModel(state.list, state.profile.budget), [state.list, state.profile.budget]);
 
@@ -835,7 +836,7 @@ function App() {
   }
 
   if (authLoading) {
-    return <AuthShell title="SmartCart" message="Loading your account..." />;
+    return <AuthShell title="SmartCart" message="טוענים את החשבון שלך..." />;
   }
 
   if (!user) {
@@ -917,6 +918,7 @@ function App() {
             budget={state.profile.budget}
             avatarBg={state.profile.avatarBg}
             emoji={state.profile.emoji}
+            firstName={state.profile.firstName}
             onCatalog={() => setCatalogOpen(true)}
             onNavigate={setActiveView}
             progress={progress}
@@ -1040,7 +1042,7 @@ function AuthScreen({ authError, setAuthError }) {
     setLoading(true);
 
     try {
-      if (!supabase) throw new Error("Supabase is not configured.");
+      if (!supabase) throw new Error("Supabase לא מוגדר בסביבת ההרצה.");
       if (mode === "signin") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
@@ -1059,7 +1061,7 @@ function AuthScreen({ authError, setAuthError }) {
         setNotice("המשתמש נוצר. אם Supabase דורש אימות מייל, צריך לאשר את המייל לפני כניסה.");
       }
     } catch (error) {
-      setAuthError(error.message || "Authentication failed.");
+      setAuthError(error.message || "הפעולה נכשלה. בדקי את הפרטים ונסי שוב.");
     } finally {
       setLoading(false);
     }
@@ -1081,7 +1083,7 @@ function AuthScreen({ authError, setAuthError }) {
             </div>
           )}
           <input autoComplete="email" dir="ltr" placeholder="email@example.com" required type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
-          <input autoComplete={mode === "signin" ? "current-password" : "new-password"} dir="ltr" minLength={6} placeholder="Password" required type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+          <input autoComplete={mode === "signin" ? "current-password" : "new-password"} dir="ltr" minLength={6} placeholder="סיסמה" required type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
           {authError && <p className="auth-error">{authError}</p>}
           {notice && <p className="auth-notice">{notice}</p>}
           <button className="primary-button" disabled={loading} type="submit">
@@ -1181,9 +1183,10 @@ function ScannerView({ product, selectedId, setSelectedId, restrictions, onAdd, 
   );
 }
 
-function HomeView({ budget, spent, saved, progress, emoji, avatarBg, onCatalog, onNavigate }) {
+function HomeView({ budget, spent, saved, progress, emoji, avatarBg, firstName, onCatalog, onNavigate }) {
   const remaining = Math.max(0, budget - spent);
   const ringOffset = 213.6 - (213.6 * Math.min(100, Math.max(0, 100 - progress))) / 100;
+  const displayName = firstName?.trim() || "משתמשת";
 
   return (
     <section className="home-mobile-shell">
@@ -1199,7 +1202,7 @@ function HomeView({ budget, spent, saved, progress, emoji, avatarBg, onCatalog, 
 
       <main className="home-content">
         <section className="home-greeting">
-          <h2>שלום מאי</h2>
+          <h2>שלום {displayName}</h2>
           <p>מוכנה לקנייה חכמה ומודעת היום?</p>
         </section>
 
@@ -1478,7 +1481,7 @@ function ShoppingListView({ categoryGroups, spent, saved, budget, progress, warn
                   <input checked={item.completed} onChange={() => onToggle(item.id)} type="checkbox" />
                   <span>
                     <strong>{item.selectedName}</strong>
-                    <small>{item.brand} - health {item.health}</small>
+                    <small>{item.brand} - דירוג בריאות {item.health}</small>
                   </span>
                 </label>
                 {item.swapped && <em>החלפת תקציב בוצעה -₪{item.saved.toFixed(2)}</em>}

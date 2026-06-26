@@ -1,187 +1,123 @@
 # SmartCart
 
-SmartCart היא אפליקציית קניות חכמה בעברית שמלווה משתמשים בזמן קנייה בסופר, עוזרת לעמוד בתקציב, מציעה החלפות זולות/בריאות יותר, ומנהלת רשימת קניות שלומדת מהרגלי הקנייה.
+SmartCart היא אפליקציית קניות חכמה בעברית שמלווה משתמשים בזמן קנייה בסופר, עוזרת לעמוד בתקציב, מציעה חלופות זולות או בריאות יותר, ומנהלת רשימת קניות שנשמרת לכל משתמש רשום.
 
 ## קישורים
 
-- אתר חי ב-Vercel: יתווסף אחרי התחברות ל-Vercel והרצת deployment.
-- סביבת פיתוח מקומית: `http://127.0.0.1:5174/`
-- ריפו GitHub: יש להעלות כריפו ציבורי לפני ההגשה.
+- אתר חי ב-Vercel: https://smartcart-project-ruddy.vercel.app
+- ריפו GitHub: https://github.com/mimi5588/smartcart-project
+- ERD: מופיע בהמשך המסמך
 
 ## הבעיה
 
-בקנייה שבועית קשה לעקוב בזמן אמת אחרי תקציב, השוואת מחירים, מוצרים בריאים יותר והרגלים חוזרים של הבית. רוב האנשים משתמשים ברשימות בוואטסאפ, פתקים, אקסל או זיכרון, ולכן מפספסים חיסכון ומגלים חריגה רק בקופה.
+במהלך קנייה שבועית קשה לעקוב בזמן אמת אחרי תקציב, מחירים, חלופות בריאות והרגלים חוזרים של הבית. הרבה משתמשים נעזרים בוואטסאפ, פתקים או זיכרון, ולכן מגלים חריגה רק בקופה ומפספסים הזדמנויות לחיסכון.
 
-SmartCart מרכזת את תהליך הקנייה במקום אחד: בחירת סופר, תקציב, סריקת מוצרים מדומה, המלצות החלפה, רשימת קניות, תובנות חיסכון ופרופיל משק בית.
+SmartCart מרכזת את התהליך במקום אחד: בחירת סופר, הגדרת תקציב, סריקת מוצרים מדומה, המלצות החלפה, רשימת קניות, תובנות חיסכון ופרופיל משק בית.
 
 ## קהל יעד
 
 - משפחות ושותפים שמנהלים תקציב קניות משותף.
-- סטודנטים או יחידים שרוצים לשלוט בהוצאות בסופר.
+- סטודנטים ויחידים שרוצים לשלוט בהוצאות בסופר.
 - משתמשים עם העדפות תזונה כמו צמחוני, טבעוני, ללא גלוטן או ללא לקטוז.
-- קונים שרוצים לדעת בזמן הקנייה אם יש חלופה זולה או בריאה יותר.
+- קונים שרוצים לראות בזמן הקנייה אם קיימת חלופה זולה או בריאה יותר.
 
 ## מתחרים ובידול
 
 | פתרון קיים | מגבלה | הבידול של SmartCart |
 | --- | --- | --- |
-| וואטסאפ/פתקים | רשימה ידנית בלי תקציב, תובנות או החלפות | רשימה אינטראקטיבית עם תקציב והמלצות |
+| וואטסאפ או פתקים | רשימה ידנית בלי תקציב, תובנות או החלפות | רשימה אינטראקטיבית עם תקציב והמלצות |
 | אקסל | לא נוח בזמן קנייה ולא מותאם למובייל | ממשק קנייה מהיר ורספונסיבי |
-| אפליקציות סופר | ממוקדות ברשת אחת | קטלוג כללי עם מגוון רשתות וסופרים |
-| השוואת מחירים ידנית | דורש עבודה בזמן אמת | מנוע החלפות מדומה שמציג חיסכון ובריאות |
+| אפליקציות סופר | ממוקדות ברשת אחת | קטלוג כללי עם כמה רשתות וסופרים |
+| השוואת מחירים ידנית | דורשת עבודה בזמן אמת | מנוע החלפות שמציג חיסכון ובריאות |
 
 ## פיצ'רים מרכזיים
 
+- הרשמה והתחברות עם מייל וסיסמה דרך Supabase Auth.
+- שמירת מצב משתמש, פרופיל ורשימת קניות ב-Supabase.
 - עמוד בית בעברית עם תקציב, פעולות מהירות וטיפ חיסכון.
-- בחירת סופר מתוך רשתות מזון בישראל.
-- סורק ברקוד מדומה עם מוצרים אמיתיים/דמויים, ברקודים ותמונות.
-- מנוע `Swap & Save` שמציע חלופה זולה או בריאה יותר.
-- קטלוג סופר רחב עם פירות, ירקות, מוצרי יסוד, חלב, בשר, ניקיון, היגיינה, מאפים, קפואים ונשנושים.
-- רשימת קניות עם סימון מוצרים, קטגוריות וסיכום תקציב.
+- בחירת סופר והגדרת תקציב דינמית.
+- סורק ברקוד מדומה עם מוצרים, מחירים, דירוג בריאות וחלופות.
+- קטלוג מוצרים והוספה ידנית של מוצר שלא קיים בקטלוג.
+- רשימת קניות עם סימון מוצרים, חישוב תקציב וחיסכון בזמן אמת.
 - תובנות חיסכון וגרפים בעזרת Recharts.
-- פרופיל משתמש עבור מאי כהן, בחירת אווטאר, העדפות תזונה ומשק בית.
-- שמירה מקומית של הנתונים בעזרת `localStorage`.
+- פרופיל משתמש, העדפות תזונה ומשק בית.
 
-## נתוני דמו
+## נתוני בדיקה
 
-- משתמשת דמו: מאי כהן.
-- אימייל דמו: `may.cohen@smartcart.local`
-- תקציב חודשי דמו: `₪1200`
-- סופר מועדף התחלתי: רמי לוי.
-- מוצרים לדוגמה: חמאה, במבה, אורז יסמין, אפרופו, שמנת, שעועית ירוקה, פירות/ירקות ומוצרי קטלוג נוספים.
+ניתן ליצור משתמש חדש ישירות במסך ההרשמה באמצעות מייל וסיסמה. לאחר התחברות המערכת יוצרת מצב התחלתי לכל משתמש ושומרת את השינויים שלו ב-Supabase.
 
-## טכנולוגיות
+משתמש מנהל קיים במערכת:
 
-- React 19
-- Vite
-- Recharts
-- CSS מותאם RTL
-- Browser Cache Storage API לתמונות חיצוניות כאשר רלוונטי
-- `localStorage` לשמירת מצב משתמש, רשימת קניות ופרופיל
+- אימייל: `maycohen5588@gmail.com`
+- הרשאות: `admin`
 
 ## שירותים חיצוניים ואינטגרציות
 
 | שירות | סוג | שימוש בפרויקט |
 | --- | --- | --- |
-| Vercel | Deployment | העלאת האתר כגרסה חיה ונגישה להגשה |
-| OpenFoodFacts / מקורות מוצר | נתוני מוצר ותמונות | מקור ראשוני לחלק מתמונות וברקודים של מוצרים |
-| OpenAI API | API בינה מלאכותית | תשובות חכמות לעוזר ההדרכה בצ'אט |
-| Browser Cache Storage API | API בדפדפן | שמירת תמונות HTTP במטמון מקומי לטעינה מהירה |
-| localStorage | אחסון לקוח | שמירת פרופיל, תקציב, רשימה והעדפות ללא שרת |
-| Recharts | ספריית UI/גרפים | הצגת תובנות חיסכון וקניות |
+| Supabase Auth | אותנטיקציה | הרשמה והתחברות עם מייל וסיסמה |
+| Supabase Postgres | בסיס נתונים | שמירת פרופיל ומצב אפליקציה לכל משתמש |
+| Supabase RLS | אבטחת מידע | הפרדת נתונים לפי `auth.uid()` |
+| Vercel | Deployment | העלאת האתר כגרסת production חיה |
+| Recharts | ספריית UI | גרפים ותובנות חיסכון |
+| Vite/React | Frontend | בניית ממשק המשתמש |
 
 ## מודל נתונים ו-ERD
 
-הגרסה הנוכחית היא Client Persisted App: הנתונים נשמרים ב-`localStorage`. אם מחברים Supabase, זהו מודל הנתונים המתוכנן:
-
 ```mermaid
 erDiagram
-  profiles {
+  auth_users ||--|| smartcart_profiles : owns
+  auth_users ||--|| smartcart_states : owns
+
+  auth_users {
     uuid id PK
+    text email
+    jsonb raw_user_meta_data
+    timestamptz created_at
+  }
+
+  smartcart_profiles {
+    uuid user_id PK, FK
+    text email
     text first_name
     text last_name
-    text email
-    text address
+    text role
     numeric monthly_budget
     text preferred_supermarket
     text avatar_emoji
     text avatar_bg
     timestamptz created_at
+    timestamptz updated_at
   }
 
-  household_members {
-    uuid id PK
-    uuid profile_id FK
-    text name
-    text role
-    text badge
+  smartcart_states {
+    uuid user_id PK, FK
+    jsonb app_state
     timestamptz created_at
+    timestamptz updated_at
   }
-
-  dietary_restrictions {
-    uuid id PK
-    uuid profile_id FK
-    text restriction
-  }
-
-  products {
-    uuid id PK
-    text barcode
-    text name
-    text brand
-    text category
-    numeric price
-    text health_grade
-    text image_url
-  }
-
-  product_dietary_tags {
-    uuid id PK
-    uuid product_id FK
-    text tag
-  }
-
-  alternatives {
-    uuid id PK
-    uuid product_id FK
-    text name
-    numeric price
-    text health_grade
-    text insight
-  }
-
-  shopping_items {
-    uuid id PK
-    uuid profile_id FK
-    uuid product_id FK
-    text selected_name
-    numeric selected_price
-    boolean completed
-    boolean swapped
-    numeric saved_amount
-    timestamptz created_at
-  }
-
-  trips {
-    uuid id PK
-    uuid profile_id FK
-    text store
-    numeric purchases_total
-    numeric savings_total
-    timestamptz trip_date
-  }
-
-  trip_items {
-    uuid id PK
-    uuid trip_id FK
-    uuid product_id FK
-    numeric price
-    numeric saved_amount
-  }
-
-  profiles ||--o{ household_members : owns
-  profiles ||--o{ dietary_restrictions : has
-  profiles ||--o{ shopping_items : creates
-  profiles ||--o{ trips : has
-  products ||--o{ product_dietary_tags : has
-  products ||--o{ alternatives : suggests
-  products ||--o{ shopping_items : appears_in
-  trips ||--o{ trip_items : contains
-  products ||--o{ trip_items : purchased_as
 ```
+
+## אבטחת גישה
+
+שתי הטבלאות הציבוריות מוגנות ב-RLS:
+
+- משתמש מחובר יכול לקרוא ולעדכן רק את הרשומה שלו.
+- אין גישה אנונימית לנתוני משתמשים.
+- הרשאת מנהל נשמרת ב-`smartcart_profiles.role` ולא בקוד צד לקוח בלבד.
 
 ## זרימה מרכזית לבדיקה
 
-1. פותחים את עמוד הבית.
-2. לוחצים על התחלת קנייה.
-3. בוחרים סופר ומוודאים שהסימון עובר לסופר שנבחר.
-4. עוברים לסריקה.
-5. בוחרים מוצר מהרשימה המדומה.
-6. בודקים מחיר, דירוג בריאות וחלופת חיסכון.
-7. מוסיפים מוצר מקורי או בוחרים החלפה.
-8. עוברים לרשימת הקניות ורואים תקציב, קטגוריות וסימון מוצרים.
-9. עוברים לתובנות ורואים גרפים וקבלות.
-10. עוברים לפרופיל, משנים אווטאר, העדפות תזונה ומוסיפים אדם למשק הבית.
+1. פותחים את האתר החי ב-Vercel.
+2. נרשמים עם מייל וסיסמה או מתחברים עם משתמש קיים.
+3. עוברים למסך ההגדרה ובוחרים סופר.
+4. משנים תקציב ומוודאים שהמספר מתעדכן.
+5. מתחילים קנייה וסורקים/בוחרים מוצר.
+6. מוסיפים מוצר מקורי או חלופה חסכונית.
+7. עוברים לרשימת הקניות ובודקים תקציב, סימון מוצרים וחיסכון.
+8. עוברים לתובנות ורואים גרפים וקבלות.
+9. עוברים לפרופיל, משנים העדפות ומוסיפים אדם למשק הבית.
+10. מתנתקים ומתחברים שוב כדי לוודא שהמידע נשמר.
 
 ## התקנה והרצה מקומית
 
@@ -190,16 +126,11 @@ npm install
 npm run dev
 ```
 
-ברירת מחדל של Vite:
+קובץ `.env.local` נדרש להרצה מול Supabase:
 
 ```text
-http://localhost:5173/
-```
-
-בסביבת הפיתוח הנוכחית האתר רץ גם ב:
-
-```text
-http://127.0.0.1:5174/
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
 ```
 
 ## Build
@@ -208,43 +139,22 @@ http://127.0.0.1:5174/
 npm run build
 ```
 
-תיקיית הפלט היא:
+תיקיית הפלט:
 
 ```text
 dist/
 ```
 
-## Deployment ל-Vercel
+## Deployment
 
-לאחר התחברות ל-Vercel:
+הפרויקט מחובר ל-Vercel כפרויקט Vite:
 
-```powershell
-npx vercel login
-npx vercel --prod
-```
-
-הגדרות מומלצות:
-
-- Framework: Vite
 - Build Command: `npm run build`
 - Output Directory: `dist`
 - Install Command: `npm install`
 
-כדי להפעיל את עוזר ה-AI ב-Vercel יש להגדיר Environment Variable:
+Production URL:
 
 ```text
-OPENAI_API_KEY=your_openai_api_key
+https://smartcart-project-ruddy.vercel.app
 ```
-
-אופציונלי:
-
-```text
-OPENAI_MODEL=gpt-4.1-mini
-```
-
-## מצב נוכחי
-
-- האפליקציה עובדת כ-Frontend מלא עם התמדה מקומית.
-- אין כרגע Backend פעיל או Supabase מחובר בפועל.
-- ERD מופיע במסמך כמודל מתוכנן לחיבור Backend.
-- Deployment ל-Vercel דורש התחברות תקפה במחשב לפני העלאה.
