@@ -625,7 +625,8 @@ function App() {
   useEffect(() => {
     document.documentElement.lang = "he";
     document.documentElement.dir = "rtl";
-    document.title = `SmartCart | ${state.profile.firstName} ${state.profile.lastName}`;
+    const profileName = `${state.profile.firstName} ${state.profile.lastName}`.trim();
+    document.title = profileName ? `SmartCart | ${profileName}` : "SmartCart";
   }, [state.profile.firstName, state.profile.lastName]);
 
   useEffect(() => {
