@@ -1,4 +1,3 @@
-﻿/* eslint-disable no-irregular-whitespace */
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Area,
@@ -32,56 +31,56 @@ const produceImage = (emoji) =>
 `)}`;
 
 const CATEGORY_LABELS = {
-  All: "׳”׳›׳",
-  Produce: "׳₪׳™׳¨׳•׳× ׳•׳™׳¨׳§׳•׳×",
-  Dairy: "׳׳•׳¦׳¨׳™ ׳—׳׳‘",
-  Cheese: "׳’׳‘׳™׳ ׳•׳×",
-  Meat: "׳‘׳©׳¨׳™׳",
-  Deli: "׳ ׳§׳ ׳™׳§׳™׳",
-  Cleaning: "׳ ׳™׳§׳™׳•׳",
-  Pantry: "׳׳–׳•׳•׳”",
-  Drinks: "׳©׳×׳™׳™׳”",
-  DryGoods: "׳׳•׳¦׳¨׳™ ׳™׳¡׳•׳“ ׳™׳‘׳©׳™׳",
-  Pasta: "׳₪׳¡׳˜׳•׳× ׳•׳׳˜׳¨׳™׳•׳×",
-  Sauces: "׳©׳׳ ׳™׳ ׳•׳¨׳˜׳‘׳™׳",
-  Canned: "׳©׳™׳׳•׳¨׳™׳ ׳•׳׳•׳›׳ ׳™׳",
-  Bakery: "׳׳—׳׳™׳ ׳•׳׳׳₪׳™׳",
-  Frozen: "׳§׳₪׳•׳׳™׳",
-  Hygiene: "׳ ׳™׳™׳¨ ׳•׳”׳™׳’׳™׳™׳ ׳”",
-  Storage: "׳—׳“ ׳₪׳¢׳׳™ ׳•׳׳—׳¡׳•׳",
-  Snacks: "׳ ׳©׳ ׳•׳©׳™׳ ׳•׳׳×׳•׳§׳™׳",
+  All: "הכל",
+  Produce: "פירות וירקות",
+  Dairy: "מוצרי חלב",
+  Cheese: "גבינות",
+  Meat: "בשרים",
+  Deli: "נקניקים",
+  Cleaning: "ניקיון",
+  Pantry: "מזווה",
+  Drinks: "שתייה",
+  DryGoods: "מוצרי יסוד יבשים",
+  Pasta: "פסטות ואטריות",
+  Sauces: "שמנים ורטבים",
+  Canned: "שימורים ומוכנים",
+  Bakery: "לחמים ומאפים",
+  Frozen: "קפואים",
+  Hygiene: "נייר והיגיינה",
+  Storage: "חד פעמי ואחסון",
+  Snacks: "נשנושים ומתוקים",
 };
 
 const DIETARY_LABELS = {
-  Vegan: "׳˜׳‘׳¢׳•׳ ׳™",
-  Vegetarian: "׳¦׳׳—׳•׳ ׳™",
-  Lactose: "׳׳›׳™׳ ׳׳§׳˜׳•׳–",
-  "Lactose-free": "׳׳׳ ׳׳§׳˜׳•׳–",
-  "Gluten-free": "׳׳׳ ׳’׳׳•׳˜׳",
-  "Nut-free": "׳׳׳ ׳׳’׳•׳–׳™׳",
-  "Sugar-free": "׳׳׳ ׳¡׳•׳›׳¨",
-  Household: "׳׳©׳§ ׳‘׳™׳×",
+  Vegan: "טבעוני",
+  Vegetarian: "צמחוני",
+  Lactose: "מכיל לקטוז",
+  "Lactose-free": "ללא לקטוז",
+  "Gluten-free": "ללא גלוטן",
+  "Nut-free": "ללא אגוזים",
+  "Sugar-free": "ללא סוכר",
+  Household: "משק בית",
 };
 
 const BULK_CATALOG_SECTIONS = [
-  ["DryGoods", "׳׳–׳•׳•׳” ׳‘׳¡׳™׳¡׳™", "נ¥£", 5.9, "׳׳•׳¨׳– ׳׳‘׳, ׳׳•׳¨׳– ׳‘׳¡׳׳˜׳™, ׳׳•׳¨׳– ׳׳׳, ׳₪׳×׳™׳×׳™׳, ׳‘׳•׳¨׳’׳•׳, ׳§׳•׳¡׳§׳•׳¡, ׳§׳™׳ ׳•׳׳”, ׳¢׳“׳©׳™׳ ׳™׳¨׳•׳§׳•׳×, ׳¢׳“׳©׳™׳ ׳›׳×׳•׳׳•׳×, ׳—׳•׳׳•׳¡ ׳™׳‘׳©, ׳©׳¢׳•׳¢׳™׳× ׳׳‘׳ ׳”, ׳©׳¢׳•׳¢׳™׳× ׳׳“׳•׳׳”, ׳’׳¨׳™׳¡׳™׳, ׳§׳׳— ׳׳‘׳, ׳§׳׳— ׳׳׳, ׳§׳׳— ׳×׳•׳₪׳—, ׳¡׳•׳›׳¨ ׳׳‘׳, ׳¡׳•׳›׳¨ ׳—׳•׳, ׳׳‘׳§׳× ׳¡׳•׳›׳¨, ׳׳׳—, ׳₪׳׳₪׳ ׳©׳—׳•׳¨, ׳₪׳₪׳¨׳™׳§׳” ׳׳×׳•׳§׳”, ׳₪׳₪׳¨׳™׳§׳” ׳—׳¨׳™׳₪׳”, ׳›׳•׳¨׳›׳•׳, ׳›׳׳•׳, ׳§׳™׳ ׳׳•׳, ׳׳‘׳§׳× ׳©׳•׳, ׳׳‘׳§׳× ׳׳¨׳§ ׳¢׳•׳£, ׳׳‘׳§׳× ׳׳¨׳§ ׳‘׳¦׳, ׳₪׳™׳¨׳•׳¨׳™ ׳׳—׳, ׳©׳•׳׳©׳•׳, ׳˜׳—׳™׳ ׳” ׳’׳•׳׳׳™׳×, ׳“׳‘׳©, ׳¡׳™׳׳׳, ׳¨׳™׳‘׳”, ׳—׳׳׳× ׳‘׳•׳˜׳ ׳™׳, ׳©׳•׳§׳•׳׳“ ׳׳׳¨׳™׳—׳”, ׳§׳§׳׳•, ׳׳‘׳§׳× ׳׳₪׳™׳™׳”, ׳¡׳•׳“׳” ׳׳©׳×׳™׳™׳”, ׳×׳׳¦׳™׳× ׳•׳ ׳™׳"],
-  ["Pasta", "׳₪׳¡׳˜׳•׳× ׳•׳׳˜׳¨׳™׳•׳×", "נ", 7.9, "׳₪׳¡׳˜׳” ׳¡׳₪׳’׳˜׳™, ׳₪׳¡׳˜׳” ׳₪׳ ׳”, ׳₪׳¡׳˜׳” ׳₪׳•׳–׳™׳׳™, ׳₪׳¡׳˜׳” ׳₪׳¨׳₪׳¨׳™׳, ׳₪׳¡׳˜׳” ׳׳§׳¨׳•׳ ׳™, ׳₪׳¡׳˜׳” ׳׳׳׳”, ׳₪׳¡׳˜׳” ׳׳׳ ׳’׳׳•׳˜׳, ׳׳˜׳¨׳™׳•׳× ׳‘׳™׳¦׳™׳, ׳׳˜׳¨׳™׳•׳× ׳׳•׳¨׳–, ׳ ׳•׳“׳׳¡ ׳׳”׳§׳₪׳¦׳”, ׳₪׳×׳™׳×׳™׳ ׳׳₪׳•׳™׳™׳, ׳§׳•׳¡׳§׳•׳¡ ׳׳”׳™׳¨ ׳”׳›׳ ׳”, ׳¨׳‘׳™׳•׳׳™ ׳׳•׳›׳, ׳ ׳™׳•׳§׳™, ׳¨׳•׳˜׳‘ ׳¢׳’׳‘׳ ׳™׳•׳× ׳׳₪׳¡׳˜׳”, ׳¨׳¡׳§ ׳¢׳’׳‘׳ ׳™׳•׳×, ׳¢׳’׳‘׳ ׳™׳•׳× ׳׳¨׳•׳¡׳§׳•׳×, ׳¢׳’׳‘׳ ׳™׳•׳× ׳§׳•׳‘׳™׳•׳×, ׳¨׳•׳˜׳‘ ׳©׳׳ ׳× ׳׳₪׳¡׳˜׳”, ׳₪׳¡׳˜׳•, ׳–׳™׳×׳™׳ ׳׳₪׳¡׳˜׳”, ׳×׳™׳¨׳¡ ׳׳§׳•׳₪׳¡׳”, ׳₪׳˜׳¨׳™׳•׳× ׳׳©׳•׳׳¨׳•׳×, ׳˜׳•׳ ׳” ׳׳₪׳¡׳˜׳”"],
-  ["Sauces", "׳©׳׳ ׳™׳ ׳•׳¨׳˜׳‘׳™׳", "נ«™", 8.9, "׳©׳׳ ׳§׳ ׳•׳׳”, ׳©׳׳ ׳–׳™׳×, ׳©׳׳ ׳—׳׳ ׳™׳•׳×, ׳©׳׳ ׳׳‘׳•׳§׳“׳•, ׳©׳׳ ׳©׳•׳׳©׳•׳, ׳¡׳₪׳¨׳™׳™ ׳©׳׳, ׳—׳•׳׳¥ ׳¨׳’׳™׳, ׳—׳•׳׳¥ ׳×׳₪׳•׳—׳™׳, ׳—׳•׳׳¥ ׳‘׳׳¡׳׳™, ׳¨׳•׳˜׳‘ ׳¡׳•׳™׳”, ׳¨׳•׳˜׳‘ ׳¦׳³׳™׳׳™ ׳׳×׳•׳§, ׳¨׳•׳˜׳‘ ׳˜׳¨׳™׳׳§׳™, ׳§׳˜׳©׳•׳₪, ׳׳™׳•׳ ׳–, ׳—׳¨׳“׳, ׳¨׳•׳˜׳‘ ׳‘׳¨׳‘׳™׳§׳™׳•, ׳¨׳•׳˜׳‘ ׳©׳•׳, ׳¨׳•׳˜׳‘ ׳׳׳£ ׳”׳׳™׳™׳, ׳¨׳•׳˜׳‘ ׳׳¡׳׳˜, ׳׳™׳׳•׳ ׳׳©׳•׳׳¨, ׳׳™׳¥ ׳׳™׳׳•׳, ׳׳׳— ׳’׳¡, ׳׳׳— ׳׳™׳׳•׳, ׳¢׳׳™ ׳“׳₪׳ ׳”, ׳¦׳³׳™׳׳™ ׳’׳¨׳•׳¡, ׳׳•׳¨׳’׳ ׳•, ׳‘׳–׳™׳׳™׳§׳•׳ ׳™׳‘׳©, ׳–׳¢׳×׳¨, ׳×׳‘׳׳™׳ ׳¢׳ ׳”׳׳©, ׳×׳‘׳׳™׳ ׳©׳•׳•׳׳¨׳׳”, ׳×׳‘׳׳™׳ ׳׳§׳¦׳™׳¦׳•׳×, ׳×׳‘׳׳™׳ ׳׳₪׳™׳¦׳”"],
-  ["Canned", "׳©׳™׳׳•׳¨׳™׳ ׳•׳׳•׳›׳ ׳™׳", "נ¥«", 6.9, "׳˜׳•׳ ׳” ׳‘׳©׳׳, ׳˜׳•׳ ׳” ׳‘׳׳™׳, ׳×׳™׳¨׳¡ ׳׳©׳•׳׳¨, ׳׳₪׳•׳ ׳” ׳•׳’׳–׳¨, ׳—׳•׳׳•׳¡ ׳׳©׳•׳׳¨, ׳©׳¢׳•׳¢׳™׳× ׳‘׳¨׳•׳˜׳‘ ׳¢׳’׳‘׳ ׳™׳•׳×, ׳₪׳˜׳¨׳™׳•׳× ׳—׳×׳•׳›׳•׳×, ׳׳׳₪׳₪׳•׳ ׳™׳ ׳—׳׳•׳¦׳™׳, ׳–׳™׳×׳™׳ ׳™׳¨׳•׳§׳™׳, ׳–׳™׳×׳™׳ ׳©׳—׳•׳¨׳™׳, ׳₪׳׳₪׳ ׳§׳׳•׳™, ׳—׳׳‘ ׳§׳•׳§׳•׳¡, ׳׳¨׳§ ׳ ׳׳¡, ׳׳ ׳” ׳—׳׳”, ׳§׳¨׳§׳¨׳™׳ ׳׳™׳©׳™׳™׳, ׳—׳˜׳™׳₪׳™ ׳׳ ׳¨׳’׳™׳”, ׳’׳¨׳ ׳•׳׳”, ׳“׳’׳ ׳™ ׳‘׳•׳§׳¨, ׳§׳•׳¨׳ ׳₪׳׳§׳¡, ׳©׳™׳‘׳•׳׳× ׳©׳•׳¢׳"],
-  ["Drinks", "׳©׳×׳™׳™׳”", "נ¥₪", 5.9, "׳׳™׳ ׳׳™׳ ׳¨׳׳™׳, ׳¡׳•׳“׳”, ׳§׳•׳׳”, ׳§׳•׳׳” ׳–׳™׳¨׳•, ׳¡׳₪׳¨׳™׳™׳˜, ׳₪׳׳ ׳˜׳”, ׳׳™׳¥ ׳×׳₪׳•׳–׳™׳, ׳׳™׳¥ ׳¢׳ ׳‘׳™׳, ׳׳™׳¥ ׳×׳₪׳•׳—׳™׳, ׳×׳” ׳§׳¨, ׳׳™׳™׳¡ ׳§׳₪׳”, ׳§׳₪׳” ׳©׳—׳•׳¨, ׳ ׳¡ ׳§׳₪׳”, ׳§׳₪׳¡׳•׳׳•׳× ׳§׳₪׳”, ׳§׳₪׳” ׳ ׳׳¡, ׳×׳” ׳¨׳’׳™׳, ׳×׳” ׳™׳¨׳•׳§, ׳×׳” ׳ ׳¢׳ ׳¢, ׳×׳” ׳§׳׳•׳׳™׳, ׳©׳•׳§׳•, ׳—׳׳‘ ׳¨׳’׳™׳, ׳—׳׳‘ ׳“׳ ׳׳§׳˜׳•׳–, ׳—׳׳‘ ׳¡׳•׳™׳”, ׳—׳׳‘ ׳©׳§׳“׳™׳, ׳—׳׳‘ ׳©׳™׳‘׳•׳׳× ׳©׳•׳¢׳, ׳׳©׳§׳” ׳׳ ׳¨׳’׳™׳”, ׳×׳¨׳›׳™׳– ׳₪׳˜׳, ׳×׳¨׳›׳™׳– ׳¢׳ ׳‘׳™׳, ׳×׳¨׳›׳™׳– ׳׳™׳׳•׳ ׳¢׳ ׳¢"],
-  ["Bakery", "׳׳—׳׳™׳ ׳•׳׳׳₪׳™׳", "נ¥–", 7.5, "׳׳—׳ ׳׳—׳™׳“, ׳׳—׳ ׳₪׳¨׳•׳¡, ׳׳—׳ ׳׳׳, ׳׳—׳ ׳§׳, ׳׳—׳ ׳›׳•׳¡׳׳™׳, ׳׳—׳ ׳©׳™׳₪׳•׳, ׳׳—׳׳ ׳™׳•׳× ׳¨׳’׳™׳׳•׳×, ׳׳—׳׳ ׳™׳•׳× ׳׳׳׳•׳×, ׳₪׳™׳×׳•׳×, ׳₪׳™׳×׳•׳× ׳׳§׳׳— ׳׳׳, ׳‘׳™׳™׳’׳, ׳˜׳•׳¨׳˜׳™׳•׳×, ׳׳׳₪׳•׳×, ׳—׳׳”, ׳‘׳׳’׳˜, ׳’׳³׳‘׳˜׳”, ׳₪׳¨׳™׳›׳™׳•׳× ׳׳•׳¨׳–, ׳₪׳¨׳™׳›׳™׳•׳× ׳×׳™׳¨׳¡, ׳¦׳ ׳™׳׳™׳, ׳˜׳•׳¡׳˜׳¢׳™׳, ׳§׳¨׳§׳¨׳™׳ ׳׳׳•׳—׳™׳, ׳§׳¨׳§׳¨׳™׳ ׳׳—׳™׳˜׳” ׳׳׳׳”, ׳§׳¨׳§׳¨׳™׳ ׳¢׳ ׳©׳•׳׳©׳•׳, ׳§׳¨׳§׳¨׳™׳ ׳“׳§׳™׳, ׳₪׳×׳™׳‘׳¨, ׳¢׳•׳’׳™׳•׳× ׳™׳‘׳©׳•׳×, ׳¢׳•׳’׳™׳•׳× ׳©׳•׳§׳•׳׳“ ׳¦׳³׳™׳₪׳¡, ׳¢׳•׳’׳™׳•׳× ׳׳׳•׳—׳•׳×, ׳‘׳™׳¡׳§׳•׳•׳™׳˜׳™׳, ׳’׳¨׳™׳¡׳™׳ ׳™"],
-  ["Dairy", "׳׳§׳¨׳¨ ׳—׳׳‘", "נ¥›", 6.9, "׳—׳׳‘, ׳‘׳™׳¦׳™׳, ׳’׳‘׳™׳ ׳” ׳׳‘׳ ׳”, ׳’׳‘׳™׳ ׳” ׳‘׳•׳׳’׳¨׳™׳×, ׳’׳‘׳™׳ ׳× ׳₪׳˜׳”, ׳’׳‘׳™׳ ׳× ׳©׳׳ ׳×, ׳™׳•׳’׳•׳¨׳˜ ׳׳‘׳, ׳™׳•׳’׳•׳¨׳˜ ׳‘׳˜׳¢׳׳™׳, ׳׳¢׳“׳ ׳™׳, ׳©׳׳ ׳× ׳׳×׳•׳§׳”, ׳©׳׳ ׳× ׳׳‘׳™׳©׳•׳, ׳׳¨׳’׳¨׳™׳ ׳”, ׳’׳‘׳™׳ ׳” ׳׳’׳•׳¨׳“׳×, ׳׳•׳¦׳¨׳׳”, ׳₪׳¨׳׳–׳"],
-  ["Produce", "׳×׳•׳¦׳¨׳× ׳˜׳¨׳™׳™׳”", "נ¥¬", 4.9, "׳‘׳¦׳ ׳׳‘׳, ׳‘׳¦׳ ׳¡׳’׳•׳, ׳©׳•׳, ׳‘׳˜׳˜׳”, ׳₪׳׳₪׳ ׳¦׳”׳•׳‘, ׳—׳¡׳”, ׳›׳¨׳•׳‘, ׳₪׳˜׳¨׳•׳–׳™׳׳™׳”, ׳›׳•׳¡׳‘׳¨׳”, ׳©׳׳™׳¨, ׳ ׳¢׳ ׳¢, ׳׳™׳׳•׳, ׳׳‘׳•׳§׳“׳•, ׳§׳™׳©׳•׳׳™׳, ׳—׳¦׳™׳׳™׳, ׳₪׳˜׳¨׳™׳•׳× ׳˜׳¨׳™׳•׳×, ׳×׳₪׳•׳–׳™׳, ׳¢׳ ׳‘׳™׳, ׳׳’׳¡׳™׳, ׳׳₪׳¨׳¡׳§׳™׳, ׳©׳–׳™׳₪׳™׳, ׳×׳•׳×׳™׳, ׳׳׳•׳, ׳׳‘׳˜׳™׳—"],
-  ["Meat", "׳§׳¦׳‘׳™׳™׳” ׳•׳“׳’׳™׳", "נ¥©", 24.9, "׳₪׳¨׳’׳™׳•׳×, ׳©׳•׳§׳™׳™׳, ׳›׳ ׳₪׳™׳™׳, ׳‘׳©׳¨ ׳˜׳—׳•׳, ׳§׳¦׳™׳¦׳•׳× ׳׳•׳›׳ ׳•׳×, ׳©׳ ׳™׳¦׳׳™׳, ׳ ׳§׳ ׳™׳§׳™׳•׳×, ׳”׳׳‘׳•׳¨׳’׳¨ ׳§׳₪׳•׳, ׳“׳’ ׳¡׳׳׳•׳, ׳“׳’ ׳׳׳ ׳•׳, ׳˜׳•׳ ׳” ׳˜׳¨׳™׳™׳” ׳׳• ׳§׳₪׳•׳׳”, ׳§׳‘׳‘, ׳©׳•׳•׳׳¨׳׳” ׳§׳₪׳•׳׳”"],
-  ["Frozen", "׳§׳₪׳•׳׳™׳", "נ§", 12.9, "׳™׳¨׳§׳•׳× ׳§׳₪׳•׳׳™׳, ׳‘׳¨׳•׳§׳•׳׳™ ׳§׳₪׳•׳, ׳©׳¢׳•׳¢׳™׳× ׳™׳¨׳•׳§׳”, ׳׳₪׳•׳ ׳” ׳§׳₪׳•׳׳”, ׳×׳™׳¨׳¡ ׳§׳₪׳•׳, ׳¦׳³׳™׳₪׳¡ ׳§׳₪׳•׳, ׳‘׳•׳¨׳§׳¡׳™׳, ׳’׳³׳—׳ ׳•׳, ׳׳׳׳•׳•׳—, ׳₪׳™׳¦׳” ׳§׳₪׳•׳׳”, ׳©׳ ׳™׳¦׳ ׳×׳™׳¨׳¡, ׳”׳׳‘׳•׳¨׳’׳¨ ׳¦׳׳—׳•׳ ׳™, ׳’׳׳™׳“׳•׳×, ׳§׳¨׳—"],
-  ["Cleaning", "׳ ׳™׳§׳™׳•׳ ׳׳‘׳™׳×", "נ§½", 9.9, "׳˜׳‘׳׳™׳•׳× ׳׳׳“׳™׳—, ׳׳׳— ׳׳׳“׳™׳—, ׳ ׳•׳–׳ ׳”׳‘׳¨׳§׳” ׳׳׳“׳™׳—, ׳¡׳₪׳•׳’׳™׳ ׳׳›׳׳™׳, ׳¡׳§׳•׳¦׳³׳™׳, ׳׳˜׳׳™׳•׳× ׳ ׳™׳§׳•׳™, ׳׳˜׳׳™׳•׳× ׳׳™׳§׳¨׳•׳₪׳™׳™׳‘׳¨, ׳ ׳™׳™׳¨ ׳¡׳•׳₪׳’, ׳׳’׳‘׳•׳ ׳™׳ ׳׳ ׳™׳§׳•׳™ ׳›׳׳׳™, ׳׳’׳‘׳•׳ ׳™׳ ׳׳¨׳¦׳₪׳”, ׳׳§׳•׳ ׳•׳׳™׳§׳”, ׳׳¡׳™׳¨ ׳©׳•׳׳ ׳™׳, ׳¡׳₪׳¨׳™׳™ ׳ ׳™׳§׳•׳™ ׳›׳׳׳™, ׳¡׳₪׳¨׳™׳™ ׳—׳׳•׳ ׳•׳×, ׳—׳•׳׳¨ ׳׳ ׳™׳§׳•׳™ ׳¨׳¦׳₪׳”, ׳—׳•׳׳¨ ׳׳ ׳™׳§׳•׳™ ׳©׳™׳¨׳•׳×׳™׳, ׳’׳³׳ ׳׳¡׳׳”, ׳׳¡׳™׳¨ ׳׳‘׳ ׳™׳×, ׳—׳•׳׳¨ ׳׳ ׳™׳§׳•׳™ ׳׳׳‘׳˜׳™׳”, ׳׳‘׳§׳× ׳›׳‘׳™׳¡׳”, ׳׳¨׳›׳ ׳›׳‘׳™׳¡׳”, ׳׳¡׳™׳¨ ׳›׳×׳׳™׳, ׳׳‘׳©׳ ׳›׳‘׳™׳¡׳”, ׳©׳§׳™׳•׳× ׳׳©׳₪׳” ׳§׳˜׳ ׳•׳×, ׳©׳§׳™׳•׳× ׳׳©׳₪׳” ׳’׳“׳•׳׳•׳×, ׳›׳₪׳₪׳•׳× ׳ ׳™׳§׳™׳•׳, ׳׳˜׳׳˜׳, ׳™׳¢׳”, ׳׳’׳‘, ׳¡׳׳¨׳˜׳•׳˜ ׳¨׳¦׳₪׳”, ׳ ׳•׳–׳ ׳׳—׳™׳˜׳•׳™ ׳™׳“׳™׳™׳"],
-  ["Hygiene", "׳ ׳™׳™׳¨ ׳•׳”׳™׳’׳™׳™׳ ׳”", "נ§´", 10.9, "׳ ׳™׳™׳¨ ׳˜׳•׳׳׳˜, ׳˜׳™׳©׳•, ׳׳’׳‘׳•׳ ׳™׳ ׳׳—׳™׳, ׳׳’׳‘׳•׳ ׳™׳ ׳׳™׳ ׳˜׳™׳׳™׳™׳, ׳¡׳‘׳•׳ ׳™׳“׳™׳™׳, ׳¡׳‘׳•׳ ׳’׳•׳£, ׳©׳׳₪׳•, ׳׳¨׳›׳ ׳©׳™׳¢׳¨, ׳׳©׳—׳× ׳©׳™׳ ׳™׳™׳, ׳׳‘׳¨׳©׳•׳× ׳©׳™׳ ׳™׳™׳, ׳׳™ ׳₪׳”, ׳“׳׳•׳“׳•׳¨׳ ׳˜, ׳¡׳›׳™׳ ׳™ ׳’׳™׳׳•׳—, ׳§׳¦׳£ ׳’׳™׳׳•׳—, ׳×׳—׳‘׳•׳©׳•׳× ׳”׳™׳’׳™׳™׳ ׳™׳•׳×, ׳˜׳׳₪׳•׳ ׳™׳, ׳₪׳“׳™׳ ׳™׳•׳׳™׳™׳, ׳§׳¨׳ ׳’׳•׳£, ׳§׳¨׳ ׳™׳“׳™׳™׳"],
-  ["Storage", "׳—׳“ ׳₪׳¢׳׳™ ׳•׳׳—׳¡׳•׳", "נ“¦", 8.9, "׳¦׳׳—׳•׳× ׳—׳“ ׳₪׳¢׳׳™׳•׳×, ׳›׳•׳¡׳•׳× ׳—׳“ ׳₪׳¢׳׳™׳•׳×, ׳¡׳›׳•׳´׳ ׳—׳“ ׳₪׳¢׳׳™, ׳׳₪׳™׳•׳×, ׳ ׳™׳™׳¨ ׳›׳¡׳£, ׳ ׳™׳™׳¨ ׳׳₪׳™׳™׳”, ׳ ׳™׳™׳׳•׳ ׳ ׳¦׳׳“, ׳©׳§׳™׳•׳× ׳׳•׳›׳, ׳©׳§׳™׳•׳× ׳¡׳ ׳“׳•׳•׳™׳¥׳³, ׳§׳•׳₪׳¡׳׳•׳× ׳׳—׳¡׳•׳, ׳§׳•׳₪׳¡׳׳•׳× ׳—׳“ ׳₪׳¢׳׳™׳•׳×, ׳×׳‘׳ ׳™׳•׳× ׳׳׳•׳׳™׳ ׳™׳•׳, ׳ ׳¨׳•׳× ׳©׳‘׳×, ׳’׳₪׳¨׳•׳¨׳™׳, ׳׳¦׳×"],
-  ["Snacks", "׳ ׳©׳ ׳•׳©׳™׳ ׳•׳׳×׳•׳§׳™׳", "נ«", 6.9, "׳‘׳™׳¡׳׳™, ׳×׳₪׳•׳¦׳³׳™׳₪׳¡, ׳“׳•׳¨׳™׳˜׳•׳¡, ׳₪׳•׳₪׳§׳•׳¨׳, ׳׳’׳•׳–׳™׳, ׳©׳§׳“׳™׳, ׳’׳¨׳¢׳™׳ ׳™׳, ׳—׳׳•׳¦׳™׳•׳×, ׳©׳•׳§׳•׳׳“, ׳—׳˜׳™׳₪׳™ ׳©׳•׳§׳•׳׳“, ׳•׳•׳₪׳׳™׳, ׳¢׳•׳’׳™׳•׳×, ׳¢׳•׳’׳•׳× ׳׳™׳©׳™׳•׳×, ׳׳¡׳˜׳™׳§׳™׳, ׳¡׳•׳›׳¨׳™׳•׳×, ׳—׳˜׳™׳₪׳™ ׳—׳׳‘׳•׳, ׳—׳˜׳™׳₪׳™ ׳’׳¨׳ ׳•׳׳”"],
+  ["DryGoods", "מזווה בסיסי", "🥣", 5.9, "אורז לבן, אורז בסמטי, אורז מלא, פתיתים, בורגול, קוסקוס, קינואה, עדשים ירוקות, עדשים כתומות, חומוס יבש, שעועית לבנה, שעועית אדומה, גריסים, קמח לבן, קמח מלא, קמח תופח, סוכר לבן, סוכר חום, אבקת סוכר, מלח, פלפל שחור, פפריקה מתוקה, פפריקה חריפה, כורכום, כמון, קינמון, אבקת שום, אבקת מרק עוף, אבקת מרק בצל, פירורי לחם, שומשום, טחינה גולמית, דבש, סילאן, ריבה, חמאת בוטנים, שוקולד למריחה, קקאו, אבקת אפייה, סודה לשתייה, תמצית וניל"],
+  ["Pasta", "פסטות ואטריות", "🍝", 7.9, "פסטה ספגטי, פסטה פנה, פסטה פוזילי, פסטה פרפרים, פסטה מקרוני, פסטה מלאה, פסטה ללא גלוטן, אטריות ביצים, אטריות אורז, נודלס להקפצה, פתיתים אפויים, קוסקוס מהיר הכנה, רביולי מוכן, ניוקי, רוטב עגבניות לפסטה, רסק עגבניות, עגבניות מרוסקות, עגבניות קוביות, רוטב שמנת לפסטה, פסטו, זיתים לפסטה, תירס לקופסה, פטריות משומרות, טונה לפסטה"],
+  ["Sauces", "שמנים ורטבים", "🫙", 8.9, "שמן קנולה, שמן זית, שמן חמניות, שמן אבוקדו, שמן שומשום, ספריי שמן, חומץ רגיל, חומץ תפוחים, חומץ בלסמי, רוטב סויה, רוטב צ׳ילי מתוק, רוטב טריאקי, קטשופ, מיונז, חרדל, רוטב ברביקיו, רוטב שום, רוטב אלף האיים, רוטב לסלט, לימון משומר, מיץ לימון, מלח גס, מלח לימון, עלי דפנה, צ׳ילי גרוס, אורגנו, בזיליקום יבש, זעתר, תבלין על האש, תבלין שווארמה, תבלין לקציצות, תבלין לפיצה"],
+  ["Canned", "שימורים ומוכנים", "🥫", 6.9, "טונה בשמן, טונה במים, תירס משומר, אפונה וגזר, חומוס משומר, שעועית ברוטב עגבניות, פטריות חתוכות, מלפפונים חמוצים, זיתים ירוקים, זיתים שחורים, פלפל קלוי, חלב קוקוס, מרק נמס, מנה חמה, קרקרים אישיים, חטיפי אנרגיה, גרנולה, דגני בוקר, קורנפלקס, שיבולת שועל"],
+  ["Drinks", "שתייה", "🥤", 5.9, "מים מינרלים, סודה, קולה, קולה זירו, ספרייט, פאנטה, מיץ תפוזים, מיץ ענבים, מיץ תפוחים, תה קר, אייס קפה, קפה שחור, נס קפה, קפסולות קפה, קפה נמס, תה רגיל, תה ירוק, תה נענע, תה קמומיל, שוקו, חלב רגיל, חלב דל לקטוז, חלב סויה, חלב שקדים, חלב שיבולת שועל, משקה אנרגיה, תרכיז פטל, תרכיז ענבים, תרכיז לימונענע"],
+  ["Bakery", "לחמים ומאפים", "🥖", 7.5, "לחם אחיד, לחם פרוס, לחם מלא, לחם קל, לחם כוסמין, לחם שיפון, לחמניות רגילות, לחמניות מלאות, פיתות, פיתות מקמח מלא, בייגל, טורטיות, לאפות, חלה, באגט, ג׳בטה, פריכיות אורז, פריכיות תירס, צנימים, טוסטעים, קרקרים מלוחים, קרקרים מחיטה מלאה, קרקרים עם שומשום, קרקרים דקים, פתיבר, עוגיות יבשות, עוגיות שוקולד צ׳יפס, עוגיות מלוחות, ביסקוויטים, גריסיני"],
+  ["Dairy", "מקרר חלב", "🥛", 6.9, "חלב, ביצים, גבינה לבנה, גבינה בולגרית, גבינת פטה, גבינת שמנת, יוגורט לבן, יוגורט בטעמים, מעדנים, שמנת מתוקה, שמנת לבישול, מרגרינה, גבינה מגורדת, מוצרלה, פרמזן"],
+  ["Produce", "תוצרת טרייה", "🥬", 4.9, "בצל לבן, בצל סגול, שום, בטטה, פלפל צהוב, חסה, כרוב, פטרוזיליה, כוסברה, שמיר, נענע, לימון, אבוקדו, קישואים, חצילים, פטריות טריות, תפוזים, ענבים, אגסים, אפרסקים, שזיפים, תותים, מלון, אבטיח"],
+  ["Meat", "קצבייה ודגים", "🥩", 24.9, "פרגיות, שוקיים, כנפיים, בשר טחון, קציצות מוכנות, שניצלים, נקניקיות, המבורגר קפוא, דג סלמון, דג אמנון, טונה טרייה או קפואה, קבב, שווארמה קפואה"],
+  ["Frozen", "קפואים", "🧊", 12.9, "ירקות קפואים, ברוקולי קפוא, שעועית ירוקה, אפונה קפואה, תירס קפוא, צ׳יפס קפוא, בורקסים, ג׳חנון, מלאווח, פיצה קפואה, שניצל תירס, המבורגר צמחוני, גלידות, קרח"],
+  ["Cleaning", "ניקיון לבית", "🧽", 9.9, "טבליות למדיח, מלח למדיח, נוזל הברקה למדיח, ספוגים לכלים, סקוצ׳ים, מטליות ניקוי, מטליות מיקרופייבר, נייר סופג, מגבונים לניקוי כללי, מגבונים לרצפה, אקונומיקה, מסיר שומנים, ספריי ניקוי כללי, ספריי חלונות, חומר לניקוי רצפה, חומר לניקוי שירותים, ג׳ל אסלה, מסיר אבנית, חומר לניקוי אמבטיה, אבקת כביסה, מרכך כביסה, מסיר כתמים, מבשם כביסה, שקיות אשפה קטנות, שקיות אשפה גדולות, כפפות ניקיון, מטאטא, יעה, מגב, סמרטוט רצפה, נוזל לחיטוי ידיים"],
+  ["Hygiene", "נייר והיגיינה", "🧴", 10.9, "נייר טואלט, טישו, מגבונים לחים, מגבונים אינטימיים, סבון ידיים, סבון גוף, שמפו, מרכך שיער, משחת שיניים, מברשות שיניים, מי פה, דאודורנט, סכיני גילוח, קצף גילוח, תחבושות היגייניות, טמפונים, פדים יומיים, קרם גוף, קרם ידיים"],
+  ["Storage", "חד פעמי ואחסון", "📦", 8.9, "צלחות חד פעמיות, כוסות חד פעמיות, סכו״ם חד פעמי, מפיות, נייר כסף, נייר אפייה, ניילון נצמד, שקיות אוכל, שקיות סנדוויץ׳, קופסאות אחסון, קופסאות חד פעמיות, תבניות אלומיניום, נרות שבת, גפרורים, מצת"],
+  ["Snacks", "נשנושים ומתוקים", "🍫", 6.9, "ביסלי, תפוצ׳יפס, דוריטוס, פופקורן, אגוזים, שקדים, גרעינים, חמוציות, שוקולד, חטיפי שוקולד, וופלים, עוגיות, עוגות אישיות, מסטיקים, סוכריות, חטיפי חלבון, חטיפי גרנולה"],
 ];
 
 const BULK_PRICE_OVERRIDES = {
-  "׳‘׳™׳¦׳™׳": 14.9,
+  "ביצים": 14.9,
 };
 
 const BULK_CATALOG_ITEMS = BULK_CATALOG_SECTIONS.flatMap(([category, brand, emoji, basePrice, rawItems], sectionIndex) =>
@@ -103,7 +102,7 @@ const CATALOG = [
   {
     id: "milk-rami",
     upc: "7290116932033",
-    name: "׳—׳׳׳”",
+    name: "חמאה",
     brand: "Tnuva",
     category: "Dairy",
     price: 12.9,
@@ -111,36 +110,36 @@ const CATALOG = [
     dietary: ["Vegetarian", "Lactose"],
     image: butterImage,
     alternative: {
-      name: "SmartBrand ׳׳׳¨׳— ׳׳•׳₪׳—׳× ׳©׳•׳׳",
+      name: "SmartBrand ממרח מופחת שומן",
       price: 9.4,
       health: "A",
       dietary: ["Vegetarian", "Lactose-free"],
-      insight: "׳—׳•׳¡׳ ג‚×3.50 ׳•׳׳×׳׳™׳ ׳™׳•׳×׳¨ ׳׳׳™ ׳©׳׳¢׳“׳™׳₪׳” ׳₪׳—׳•׳× ׳׳§׳˜׳•׳–.",
+      insight: "חוסך ₪3.50 ומתאים יותר למי שמעדיפה פחות לקטוז.",
     },
   },
   {
     id: "cereal-organic",
     upc: "7290001302279",
-    name: "׳‘׳׳‘׳”",
-    brand: "Osem, ׳׳•׳¡׳",
+    name: "במבה",
+    brand: "Osem, אוסם",
     category: "Pantry",
     price: 8.9,
     health: "C",
     dietary: ["Vegetarian"],
-    image: produceImage("נ¿"),
+    image: produceImage("🍿"),
     alternative: {
-      name: "SmartBrand ׳₪׳•׳₪׳§׳•׳¨׳ ׳˜׳‘׳¢׳™",
+      name: "SmartBrand פופקורן טבעי",
       price: 5.9,
       health: "B",
       dietary: ["Vegan", "Gluten-free"],
-      insight: "׳—׳•׳¡׳ ג‚×3.00 ׳•׳׳•׳¨׳™׳“ ׳ ׳×׳¨׳ ׳•׳©׳•׳׳ ׳‘׳™׳—׳¡ ׳׳—׳˜׳™׳£ ׳”׳׳§׳•׳¨׳™.",
+      insight: "חוסך ₪3.00 ומוריד נתרן ושומן ביחס לחטיף המקורי.",
     },
   },
   {
     id: "pasta-local",
     upc: "7290017406374",
-    name: "׳׳•׳¨׳– ׳™׳¡׳׳™׳",
-    brand: "׳¨׳׳™ ׳׳•׳™",
+    name: "אורז יסמין",
+    brand: "רמי לוי",
     category: "Pantry",
     price: 11.9,
     health: "A",
@@ -151,44 +150,44 @@ const CATALOG = [
   {
     id: "soda-premium",
     upc: "7290000066332",
-    name: "׳׳₪׳¨׳•׳₪׳•",
-    brand: "Osem, ׳׳¡׳",
+    name: "אפרופו",
+    brand: "Osem, אסם",
     category: "Pantry",
     price: 9.9,
     health: "D",
     dietary: ["Vegan", "Gluten-free"],
     image: apropoImage,
     alternative: {
-      name: "SmartBrand ׳—׳˜׳™׳£ ׳×׳™׳¨׳¡ ׳׳₪׳•׳™",
+      name: "SmartBrand חטיף תירס אפוי",
       price: 6.4,
       health: "B",
       dietary: ["Vegan", "Gluten-free", "Sugar-free"],
-      insight: "׳—׳•׳¡׳ ג‚×3.50 ׳•׳׳¦׳™׳¢ ׳—׳׳•׳₪׳” ׳§׳׳” ׳™׳•׳×׳¨ ׳׳ ׳©׳ ׳•׳©.",
+      insight: "חוסך ₪3.50 ומציע חלופה קלה יותר לנשנוש.",
     },
   },
   {
     id: "olive-oil",
     upc: "7290004125455",
-    name: "׳©׳׳ ׳× ׳—׳׳•׳¦׳” 15%",
-    brand: "׳×׳ ׳•׳‘׳”",
+    name: "שמנת חמוצה 15%",
+    brand: "תנובה",
     category: "Pantry",
     price: 10.9,
     health: "D",
     dietary: ["Vegetarian", "Lactose"],
     image: sourCreamImage,
     alternative: {
-      name: "SmartBrand ׳©׳׳ ׳× 9%",
+      name: "SmartBrand שמנת 9%",
       price: 7.9,
       health: "C",
       dietary: ["Vegetarian"],
-      insight: "׳—׳•׳¡׳ ג‚×3.00 ׳•׳׳₪׳—׳™׳× ׳׳—׳•׳–׳™ ׳©׳•׳׳.",
+      insight: "חוסך ₪3.00 ומפחית אחוזי שומן.",
     },
   },
   {
     id: "tomatoes",
     upc: "7290018564059",
-    name: "׳©׳¢׳•׳¢׳™׳× ׳™׳¨׳•׳§׳” ׳©׳׳׳” ׳¢׳“׳™׳ ׳”",
-    brand: "׳¨׳׳™ ׳׳•׳™",
+    name: "שעועית ירוקה שלמה עדינה",
+    brand: "רמי לוי",
     category: "Produce",
     price: 12.4,
     health: "A",
@@ -199,247 +198,247 @@ const CATALOG = [
   {
     id: "banana-loose",
     upc: "PLU 4011",
-    name: "׳‘׳ ׳ ׳•׳× ׳˜׳¨׳™׳•׳×",
-    brand: "׳×׳•׳¦׳¨׳× ׳˜׳¨׳™׳™׳”",
+    name: "בננות טריות",
+    brand: "תוצרת טרייה",
     category: "Produce",
     price: 6.9,
     health: "A",
     dietary: ["Vegan", "Gluten-free", "Nut-free"],
-    image: produceImage("נ"),
+    image: produceImage("🍌"),
     alternative: null,
   },
   {
     id: "apple-red",
     upc: "PLU 4017",
-    name: "׳×׳₪׳•׳— ׳׳“׳•׳",
-    brand: "׳×׳•׳¦׳¨׳× ׳˜׳¨׳™׳™׳”",
+    name: "תפוח אדום",
+    brand: "תוצרת טרייה",
     category: "Produce",
     price: 9.9,
     health: "A",
     dietary: ["Vegan", "Gluten-free", "Nut-free"],
-    image: produceImage("נ"),
+    image: produceImage("🍎"),
     alternative: null,
   },
   {
     id: "tomato-loose",
     upc: "PLU 4664",
-    name: "׳¢׳’׳‘׳ ׳™׳•׳×",
-    brand: "׳×׳•׳¦׳¨׳× ׳˜׳¨׳™׳™׳”",
+    name: "עגבניות",
+    brand: "תוצרת טרייה",
     category: "Produce",
     price: 7.5,
     health: "A",
     dietary: ["Vegan", "Gluten-free", "Nut-free"],
-    image: produceImage("נ…"),
+    image: produceImage("🍅"),
     alternative: null,
   },
   {
     id: "cucumber-loose",
     upc: "PLU 4593",
-    name: "׳׳׳₪׳₪׳•׳ ׳™׳",
-    brand: "׳×׳•׳¦׳¨׳× ׳˜׳¨׳™׳™׳”",
+    name: "מלפפונים",
+    brand: "תוצרת טרייה",
     category: "Produce",
     price: 5.9,
     health: "A",
     dietary: ["Vegan", "Gluten-free", "Nut-free"],
-    image: produceImage("נ¥’"),
+    image: produceImage("🥒"),
     alternative: null,
   },
   {
     id: "pepper-red",
     upc: "PLU 4688",
-    name: "׳₪׳׳₪׳ ׳׳“׳•׳",
-    brand: "׳×׳•׳¦׳¨׳× ׳˜׳¨׳™׳™׳”",
+    name: "פלפל אדום",
+    brand: "תוצרת טרייה",
     category: "Produce",
     price: 11.9,
     health: "A",
     dietary: ["Vegan", "Gluten-free", "Nut-free"],
-    image: produceImage("נ«‘"),
+    image: produceImage("🫑"),
     alternative: null,
   },
   {
     id: "carrot-loose",
     upc: "PLU 4562",
-    name: "׳’׳–׳¨",
-    brand: "׳×׳•׳¦׳¨׳× ׳˜׳¨׳™׳™׳”",
+    name: "גזר",
+    brand: "תוצרת טרייה",
     category: "Produce",
     price: 4.9,
     health: "A",
     dietary: ["Vegan", "Gluten-free", "Nut-free"],
-    image: produceImage("נ¥•"),
+    image: produceImage("🥕"),
     alternative: null,
   },
   {
     id: "potato-white",
     upc: "PLU 4072",
-    name: "׳×׳₪׳•׳—׳™ ׳׳“׳׳” ׳׳‘׳ ׳™׳",
-    brand: "׳×׳•׳¦׳¨׳× ׳˜׳¨׳™׳™׳”",
+    name: "תפוחי אדמה לבנים",
+    brand: "תוצרת טרייה",
     category: "Produce",
     price: 4.5,
     health: "B",
     dietary: ["Vegan", "Gluten-free", "Nut-free"],
-    image: produceImage("נ¥”"),
+    image: produceImage("🥔"),
     alternative: null,
   },
   {
     id: "onion-dry",
     upc: "PLU 4665",
-    name: "׳‘׳¦׳ ׳™׳‘׳©",
-    brand: "׳×׳•׳¦׳¨׳× ׳˜׳¨׳™׳™׳”",
+    name: "בצל יבש",
+    brand: "תוצרת טרייה",
     category: "Produce",
     price: 3.9,
     health: "A",
     dietary: ["Vegan", "Gluten-free", "Nut-free"],
-    image: produceImage("נ§…"),
+    image: produceImage("🧅"),
     alternative: null,
   },
   {
     id: "cheese-cottage",
     upc: "7290004125011",
-    name: "׳§׳•׳˜׳’' 5%",
-    brand: "׳×׳ ׳•׳‘׳”",
+    name: "קוטג' 5%",
+    brand: "תנובה",
     category: "Cheese",
     price: 6.9,
     health: "B",
     dietary: ["Vegetarian", "Lactose"],
-    image: produceImage("נ§€"),
+    image: produceImage("🧀"),
     alternative: {
-      name: "SmartBrand ׳§׳•׳˜׳’' 3%",
+      name: "SmartBrand קוטג' 3%",
       price: 5.8,
       health: "A",
       dietary: ["Vegetarian"],
-      insight: "׳—׳•׳¡׳ ג‚×1.10 ׳•׳׳₪׳—׳™׳× ׳׳—׳•׳–׳™ ׳©׳•׳׳ ׳‘׳׳™ ׳׳•׳•׳×׳¨ ׳¢׳ ׳—׳׳‘׳•׳.",
+      insight: "חוסך ₪1.10 ומפחית אחוזי שומן בלי לוותר על חלבון.",
     },
   },
   {
     id: "cheese-yellow",
     upc: "7290004125028",
-    name: "׳’׳‘׳™׳ ׳” ׳¦׳”׳•׳‘׳” ׳₪׳¨׳•׳¡׳” 28%",
-    brand: "׳¢׳׳§",
+    name: "גבינה צהובה פרוסה 28%",
+    brand: "עמק",
     category: "Cheese",
     price: 18.9,
     health: "C",
     dietary: ["Vegetarian", "Lactose"],
-    image: produceImage("נ§€"),
+    image: produceImage("🧀"),
     alternative: {
-      name: "׳’׳‘׳™׳ ׳” ׳¦׳”׳•׳‘׳” 9% SmartBrand",
+      name: "גבינה צהובה 9% SmartBrand",
       price: 15.9,
       health: "B",
       dietary: ["Vegetarian"],
-      insight: "׳—׳•׳¡׳ ג‚×3.00 ׳•׳׳•׳¨׳™׳“ ׳©׳•׳׳ ׳¨׳•׳•׳™ ׳‘׳׳¨׳•׳—׳•׳× ׳”׳©׳‘׳•׳¢.",
+      insight: "חוסך ₪3.00 ומוריד שומן רווי בארוחות השבוע.",
     },
   },
   {
     id: "meat-chicken-breast",
     upc: "7290012347115",
-    name: "׳—׳–׳” ׳¢׳•׳£ ׳˜׳¨׳™",
-    brand: "׳”׳§׳¦׳‘׳™׳™׳”",
+    name: "חזה עוף טרי",
+    brand: "הקצבייה",
     category: "Meat",
     price: 34.9,
     health: "A",
     dietary: ["Gluten-free", "Nut-free"],
-    image: produceImage("נ—"),
+    image: produceImage("🍗"),
     alternative: null,
   },
   {
     id: "meat-ground-beef",
     upc: "7290012347122",
-    name: "׳‘׳©׳¨ ׳‘׳§׳¨ ׳˜׳—׳•׳",
-    brand: "׳”׳§׳¦׳‘׳™׳™׳”",
+    name: "בשר בקר טחון",
+    brand: "הקצבייה",
     category: "Meat",
     price: 42.9,
     health: "C",
     dietary: ["Gluten-free", "Nut-free"],
-    image: produceImage("נ¥©"),
+    image: produceImage("🥩"),
     alternative: {
-      name: "׳‘׳§׳¨ ׳˜׳—׳•׳ ׳¨׳–׳” 10%",
+      name: "בקר טחון רזה 10%",
       price: 39.9,
       health: "B",
       dietary: ["Gluten-free"],
-      insight: "׳—׳•׳¡׳ ג‚×3.00 ׳•׳׳₪׳—׳™׳× ׳©׳•׳׳ ׳‘׳™׳—׳¡ ׳׳‘׳©׳¨ ׳¨׳’׳™׳.",
+      insight: "חוסך ₪3.00 ומפחית שומן ביחס לבשר רגיל.",
     },
   },
   {
     id: "deli-turkey",
     upc: "7290012347214",
-    name: "׳₪׳¡׳˜׳¨׳׳” ׳”׳•׳“׳• ׳“׳§׳™׳§׳”",
-    brand: "׳׳¢׳“׳ ׳™׳™׳”",
+    name: "פסטרמה הודו דקיקה",
+    brand: "מעדנייה",
     category: "Deli",
     price: 16.9,
     health: "C",
     dietary: ["Gluten-free"],
-    image: produceImage("נ¥×"),
+    image: produceImage("🥪"),
     alternative: {
-      name: "׳₪׳¡׳˜׳¨׳׳” ׳׳•׳₪׳—׳×׳× ׳ ׳×׳¨׳",
+      name: "פסטרמה מופחתת נתרן",
       price: 15.5,
       health: "B",
       dietary: ["Gluten-free"],
-      insight: "׳—׳•׳¡׳ ג‚×1.40 ׳•׳׳§׳˜׳™׳ ׳¦׳¨׳™׳›׳× ׳ ׳×׳¨׳ ׳‘׳ ׳©׳ ׳•׳©׳™׳ ׳•׳›׳¨׳™׳›׳™׳.",
+      insight: "חוסך ₪1.40 ומקטין צריכת נתרן בנשנושים וכריכים.",
     },
   },
   {
     id: "deli-salami",
     upc: "7290012347221",
-    name: "׳ ׳§׳ ׳™׳§ ׳¡׳׳׳™ ׳₪׳¨׳•׳¡",
-    brand: "׳׳¢׳“׳ ׳™׳™׳”",
+    name: "נקניק סלמי פרוס",
+    brand: "מעדנייה",
     category: "Deli",
     price: 19.9,
     health: "D",
     dietary: ["Gluten-free"],
-    image: produceImage("נ¥“"),
+    image: produceImage("🥓"),
     alternative: {
-      name: "׳ ׳§׳ ׳™׳§ ׳”׳•׳“׳• ׳׳•׳₪׳—׳× ׳©׳•׳׳",
+      name: "נקניק הודו מופחת שומן",
       price: 17.9,
       health: "C",
       dietary: ["Gluten-free"],
-      insight: "׳—׳•׳¡׳ ג‚×2.00 ׳•׳׳¦׳™׳¢ ׳—׳׳•׳₪׳” ׳§׳׳” ׳™׳•׳×׳¨ ׳׳›׳¨׳™׳›׳™׳.",
+      insight: "חוסך ₪2.00 ומציע חלופה קלה יותר לכריכים.",
     },
   },
   {
     id: "cleaning-dish-soap",
     upc: "7290012347313",
-    name: "׳¡׳‘׳•׳ ׳›׳׳™׳ ׳׳™׳׳•׳",
-    brand: "׳¡׳ ׳•",
+    name: "סבון כלים לימון",
+    brand: "סנו",
     category: "Cleaning",
     price: 8.9,
     health: "B",
     dietary: ["Household"],
-    image: produceImage("נ§½"),
+    image: produceImage("🧽"),
     alternative: {
-      name: "SmartBrand ׳¡׳‘׳•׳ ׳›׳׳™׳ ׳׳¨׳•׳›׳–",
+      name: "SmartBrand סבון כלים מרוכז",
       price: 6.9,
       health: "B",
       dietary: ["Household"],
-      insight: "׳—׳•׳¡׳ ג‚×2.00 ׳•׳׳×׳׳™׳ ׳׳§׳ ׳™׳™׳” ׳—׳•׳“׳©׳™׳× ׳§׳‘׳•׳¢׳”.",
+      insight: "חוסך ₪2.00 ומתאים לקנייה חודשית קבועה.",
     },
   },
   {
     id: "cleaning-laundry-gel",
     upc: "7290012347320",
-    name: "׳’'׳ ׳›׳‘׳™׳¡׳” 3 ׳׳™׳˜׳¨",
-    brand: "׳‘׳“׳™׳",
+    name: "ג'ל כביסה 3 ליטר",
+    brand: "בדין",
     category: "Cleaning",
     price: 29.9,
     health: "B",
     dietary: ["Household"],
-    image: produceImage("נ§´"),
+    image: produceImage("🧴"),
     alternative: {
-      name: "SmartBrand ׳’'׳ ׳›׳‘׳™׳¡׳” ׳—׳¡׳›׳•׳ ׳™",
+      name: "SmartBrand ג'ל כביסה חסכוני",
       price: 23.9,
       health: "B",
       dietary: ["Household"],
-      insight: "׳—׳•׳¡׳ ג‚×6.00 ׳‘׳׳•׳¦׳¨ ׳ ׳™׳§׳™׳•׳ ׳©׳ ׳§׳ ׳” ׳›׳׳¢׳˜ ׳›׳ ׳—׳•׳“׳©.",
+      insight: "חוסך ₪6.00 במוצר ניקיון שנקנה כמעט כל חודש.",
     },
   },
   {
     id: "cleaning-trash-bags",
     upc: "7290012347337",
-    name: "׳©׳§׳™׳•׳× ׳׳©׳₪׳” ׳—׳–׳§׳•׳×",
-    brand: "׳ ׳™׳§׳•׳",
+    name: "שקיות אשפה חזקות",
+    brand: "ניקול",
     category: "Cleaning",
     price: 12.9,
     health: "B",
     dietary: ["Household"],
-    image: produceImage("נ§»"),
+    image: produceImage("🧻"),
     alternative: null,
   },
   ...BULK_CATALOG_ITEMS,
@@ -448,50 +447,50 @@ const CATALOG = [
 const TRIPS = [
   {
     id: "trip-1",
-    store: "׳¨׳׳™ ׳׳•׳™",
-    date: "׳”׳™׳•׳, 14:30",
+    store: "רמי לוי",
+    date: "היום, 14:30",
     purchases: 342,
     savings: 58,
     items: [
-      ["׳‘׳׳‘׳”", 8.9, 3],
-      ["׳׳•׳¨׳– ׳™׳¡׳׳™׳", 11.9, 0],
-      ["׳©׳¢׳•׳¢׳™׳× ׳™׳¨׳•׳§׳” ׳©׳׳׳” ׳¢׳“׳™׳ ׳”", 12.4, 0],
+      ["במבה", 8.9, 3],
+      ["אורז יסמין", 11.9, 0],
+      ["שעועית ירוקה שלמה עדינה", 12.4, 0],
     ],
   },
   {
     id: "trip-2",
-    store: "׳©׳•׳₪׳¨׳¡׳ ׳“׳™׳",
-    date: "׳׳×׳׳•׳, 09:15",
+    store: "שופרסל דיל",
+    date: "אתמול, 09:15",
     purchases: 418,
     savings: 42,
     items: [
-      ["׳©׳׳ ׳× ׳—׳׳•׳¦׳” 15%", 10.9, 3],
-      ["׳׳₪׳¨׳•׳₪׳•", 9.9, 3.5],
-      ["׳—׳׳׳”", 12.9, 3.5],
+      ["שמנת חמוצה 15%", 10.9, 3],
+      ["אפרופו", 9.9, 3.5],
+      ["חמאה", 12.9, 3.5],
     ],
   },
   {
     id: "trip-3",
-    store: "׳•׳™׳§׳˜׳•׳¨׳™",
-    date: "׳׳₪׳ ׳™ 3 ׳™׳׳™׳",
+    store: "ויקטורי",
+    date: "לפני 3 ימים",
     purchases: 215,
     savings: 24,
     items: [
-      ["SmartBrand ׳—׳˜׳™׳£ ׳×׳™׳¨׳¡ ׳׳₪׳•׳™", 6.4, 3.5],
-      ["SmartBrand ׳₪׳•׳₪׳§׳•׳¨׳ ׳˜׳‘׳¢׳™", 5.9, 3],
-      ["SmartBrand ׳©׳׳ ׳× 9%", 7.9, 3],
+      ["SmartBrand חטיף תירס אפוי", 6.4, 3.5],
+      ["SmartBrand פופקורן טבעי", 5.9, 3],
+      ["SmartBrand שמנת 9%", 7.9, 3],
     ],
   },
 ];
 
 const CHART_DATA = [
-  { label: "׳©׳ ׳™", purchases: 122, savings: 18 },
-  { label: "׳©׳׳™׳©׳™", purchases: 188, savings: 32 },
-  { label: "׳¨׳‘׳™׳¢׳™", purchases: 96, savings: 14 },
-  { label: "׳—׳׳™׳©׳™", purchases: 242, savings: 45 },
-  { label: "׳©׳™׳©׳™", purchases: 318, savings: 58 },
-  { label: "׳©׳‘׳×", purchases: 408, savings: 76 },
-  { label: "׳¨׳׳©׳•׳", purchases: 164, savings: 22 },
+  { label: "שני", purchases: 122, savings: 18 },
+  { label: "שלישי", purchases: 188, savings: 32 },
+  { label: "רביעי", purchases: 96, savings: 14 },
+  { label: "חמישי", purchases: 242, savings: 45 },
+  { label: "שישי", purchases: 318, savings: 58 },
+  { label: "שבת", purchases: 408, savings: 76 },
+  { label: "ראשון", purchases: 164, savings: 22 },
 ];
 
 const DEFAULT_PROFILE = {
@@ -509,21 +508,21 @@ const DEFAULT_PROFILE = {
 };
 
 const storageKeyForUser = (userId) => `smartcart-polished-state-${userId}`;
-const RESTRICTIONS = ["׳˜׳‘׳¢׳•׳ ׳™", "׳¦׳׳—׳•׳ ׳™", "׳׳׳ ׳׳§׳˜׳•׳–", "׳׳׳ ׳’׳׳•׳˜׳", "׳׳׳ ׳׳’׳•׳–׳™׳"];
+const RESTRICTIONS = ["טבעוני", "צמחוני", "ללא לקטוז", "ללא גלוטן", "ללא אגוזים"];
 const RESTRICTION_MATCH = {
-  "׳˜׳‘׳¢׳•׳ ׳™": "Vegan",
-  "׳¦׳׳—׳•׳ ׳™": "Vegetarian",
-  "׳׳׳ ׳׳§׳˜׳•׳–": "Lactose-free",
-  "׳׳׳ ׳’׳׳•׳˜׳": "Gluten-free",
-  "׳׳׳ ׳׳’׳•׳–׳™׳": "Nut-free",
+  "טבעוני": "Vegan",
+  "צמחוני": "Vegetarian",
+  "ללא לקטוז": "Lactose-free",
+  "ללא גלוטן": "Gluten-free",
+  "ללא אגוזים": "Nut-free",
 };
 
 const STANDARD_BASKET = [
-  { id: "weekly-dairy", label: "׳׳•׳¦׳¨ ׳—׳׳‘ ׳©׳‘׳•׳¢׳™", category: "Dairy", match: ["׳—׳׳׳”", "Sour Cream", "׳©׳׳ ׳×", "Milk"], cadence: "׳›׳ ׳©׳‘׳•׳¢" },
-  { id: "pantry-base", label: "׳‘׳¡׳™׳¡ ׳׳–׳•׳•׳”", category: "Pantry", match: ["׳׳•׳¨׳– ׳™׳¡׳׳™׳", "rice", "Pasta"], cadence: "׳₪׳¢׳׳™׳™׳ ׳‘׳—׳•׳“׳©" },
-  { id: "healthy-veg", label: "׳™׳¨׳§/׳×׳•׳¡׳₪׳× ׳‘׳¨׳™׳׳”", category: "Produce", match: ["׳©׳¢׳•׳¢׳™׳×", "Tomatoes", "Produce"], cadence: "׳›׳ ׳§׳ ׳™׳™׳”" },
-  { id: "snack-control", label: "׳ ׳©׳ ׳•׳© ׳׳‘׳•׳§׳¨", category: "Pantry", match: ["׳‘׳׳‘׳”", "׳׳₪׳¨׳•׳₪׳•", "Popcorn"], cadence: "׳׳₪׳™ ׳¦׳•׳¨׳" },
-  { id: "smart-swap", label: "׳—׳׳•׳₪׳× ׳—׳™׳¡׳›׳•׳", category: "Savings", match: ["SmartBrand"], cadence: "׳›׳©׳™׳© ׳”׳¦׳¢׳”" },
+  { id: "weekly-dairy", label: "מוצר חלב שבועי", category: "Dairy", match: ["חמאה", "Sour Cream", "שמנת", "Milk"], cadence: "כל שבוע" },
+  { id: "pantry-base", label: "בסיס מזווה", category: "Pantry", match: ["אורז יסמין", "rice", "Pasta"], cadence: "פעמיים בחודש" },
+  { id: "healthy-veg", label: "ירק/תוספת בריאה", category: "Produce", match: ["שעועית", "Tomatoes", "Produce"], cadence: "כל קנייה" },
+  { id: "snack-control", label: "נשנוש מבוקר", category: "Pantry", match: ["במבה", "אפרופו", "Popcorn"], cadence: "לפי צורך" },
+  { id: "smart-swap", label: "חלופת חיסכון", category: "Savings", match: ["SmartBrand"], cadence: "כשיש הצעה" },
 ];
 
 function createDefaultState(profile) {
@@ -531,6 +530,11 @@ function createDefaultState(profile) {
     list: [],
     profile,
   };
+}
+
+function isRemovedHouseholdContact(member) {
+  const normalizedName = String(member?.name || "").trim().toLowerCase();
+  return ["נועה לוי", "נעה לוי", "noa levi"].includes(normalizedName);
 }
 
 function profileFromSupabase(user, dbProfile = null) {
@@ -568,6 +572,9 @@ function dbProfileFromState(userId, state) {
 function normalizeStoredState(baseProfile, storedState) {
   const parsed = storedState || {};
   const parsedProfile = parsed.profile || {};
+  const household = Array.isArray(parsedProfile.household)
+    ? parsedProfile.household.filter((member) => !isRemovedHouseholdContact(member))
+    : [];
   return {
     ...parsed,
     list: Array.isArray(parsed.list) ? parsed.list : [],
@@ -576,6 +583,7 @@ function normalizeStoredState(baseProfile, storedState) {
       ...parsedProfile,
       email: baseProfile.email,
       role: baseProfile.role,
+      household,
     },
   };
 }
@@ -760,7 +768,7 @@ function App() {
         ...current.list,
       ],
     }));
-    flash(useAlternative ? `׳”׳—׳׳₪׳× ׳×׳§׳¦׳™׳‘ ׳‘׳•׳¦׳¢׳”: ׳ ׳—׳¡׳›׳• ג‚×${savedValue.toFixed(2)}` : "׳”׳׳•׳¦׳¨ ׳”׳׳§׳•׳¨׳™ ׳ ׳•׳¡׳£");
+    flash(useAlternative ? `החלפת תקציב בוצעה: נחסכו ₪${savedValue.toFixed(2)}` : "המוצר המקורי נוסף");
   }
 
   function toggleComplete(id) {
@@ -801,7 +809,7 @@ function App() {
     });
   }
 
-  function addHouseholdMember(name, role = "׳©׳•׳×׳£/׳”") {
+  function addHouseholdMember(name, role = "שותף/ה") {
     if (!name.trim()) return;
     setState((current) => ({
       ...current,
@@ -809,21 +817,21 @@ function App() {
         ...current.profile,
         household: [
           ...current.profile.household,
-          { name: name.trim(), role, badge: "׳§׳•׳ ׳” ׳—׳“׳©/׳”" },
+          { name: name.trim(), role, badge: "קונה חדש/ה" },
         ],
       },
     }));
     setInviteOpen(false);
-    flash("׳׳“׳ ׳—׳“׳© ׳ ׳•׳¡׳£ ׳׳׳©׳§ ׳”׳‘׳™׳×");
+    flash("אדם חדש נוסף למשק הבית");
   }
 
   function handleReferral(email) {
     if (!email.includes("@") || email.endsWith("@example.com")) {
-      flash("׳”׳›׳ ׳™׳¡׳™ ׳›׳×׳•׳‘׳× ׳׳™׳׳™׳™׳ ׳×׳§׳™׳ ׳” ׳׳”׳–׳׳ ׳”");
+      flash("הכניסי כתובת אימייל תקינה להזמנה");
       return;
     }
     setReferralOpen(false);
-    flash(`׳”׳–׳׳ ׳× ׳©׳•׳×׳£ ׳”׳•׳›׳ ׳” ׳¢׳‘׳•׳¨ ${email}`);
+    flash(`הזמנת שותף הוכנה עבור ${email}`);
   }
 
   if (authLoading) {
@@ -841,18 +849,18 @@ function App() {
           <span>SC</span>
           <div>
             <strong>SmartCart</strong>
-            <small>׳׳¢׳¨׳›׳× ׳§׳ ׳™׳•׳× ׳—׳›׳׳”</small>
+            <small>מערכת קניות חכמה</small>
           </div>
         </button>
 
         <nav className="side-nav">
           {[
-            ["home", "׳‘׳™׳×", "׳¡׳§׳™׳¨׳” ׳™׳•׳׳™׳×"],
-            ["setup", "׳”׳›׳ ׳”", "׳‘׳—׳™׳¨׳× ׳¡׳•׳₪׳¨ ׳•׳×׳§׳¦׳™׳‘"],
-            ["scanner", "׳¡׳¨׳™׳§׳”", "׳”׳—׳׳₪׳•׳× ׳‘׳–׳׳ ׳׳׳×"],
-            ["list", "׳¨׳©׳™׳׳× ׳§׳ ׳™׳•׳×", "׳×׳§׳¦׳™׳‘ ׳•׳¦'׳§׳׳™׳¡׳˜"],
-            ["dashboard", "׳×׳•׳‘׳ ׳•׳×", "׳ ׳™׳×׳•׳— ׳—׳™׳¡׳›׳•׳"],
-            ["profile", "׳₪׳¨׳•׳₪׳™׳", "׳”׳¢׳“׳₪׳•׳× ׳”׳‘׳™׳×"],
+            ["home", "בית", "סקירה יומית"],
+            ["setup", "הכנה", "בחירת סופר ותקציב"],
+            ["scanner", "סריקה", "החלפות בזמן אמת"],
+            ["list", "רשימת קניות", "תקציב וצ'קליסט"],
+            ["dashboard", "תובנות", "ניתוח חיסכון"],
+            ["profile", "פרופיל", "העדפות הבית"],
           ].map(([id, label, detail]) => (
             <button
               className={activeView === id ? "nav-item nav-item-active" : "nav-item"}
@@ -867,8 +875,8 @@ function App() {
         </nav>
 
         <div className={warning ? "budget-mini budget-mini-warn" : "budget-mini"}>
-          <span>׳׳¦׳‘ ׳”׳×׳§׳¦׳™׳‘</span>
-          <strong>ג‚×{spent.toFixed(0)} / ג‚×{state.profile.budget}</strong>
+          <span>מצב התקציב</span>
+          <strong>?{spent.toFixed(0)} / ?{state.profile.budget}</strong>
           <div className="mini-bar">
             <i style={{ width: `${progress}%` }} />
           </div>
@@ -895,10 +903,10 @@ function App() {
             </div>
             <div className="topbar-actions">
               <button className="ghost-button" onClick={() => setCatalogOpen(true)} type="button">
-                ׳₪׳×׳—׳™ ׳§׳˜׳׳•׳’
+                פתחי קטלוג
               </button>
             <button className="primary-button" onClick={() => setActiveView("setup")} type="button">
-              ׳”׳×׳—׳™׳׳™ ׳¡׳¨׳™׳§׳”
+              התחילי סריקה
             </button>
             </div>
           </header>
@@ -1103,10 +1111,10 @@ function ScannerView({ product, selectedId, setSelectedId, restrictions, onAdd, 
           <span className="corner br" />
           <span className="laser" />
           <div className="focus-dot" />
-          <p>׳¡׳¨׳•׳§ ׳‘׳¨׳§׳•׳“</p>
+          <p>סרוק ברקוד</p>
         </div>
 
-        <label className="field-label" htmlFor="simulated-item">׳׳•׳¦׳¨ ׳׳“׳™׳׳•׳™ ׳¡׳¨׳™׳§׳”</label>
+        <label className="field-label" htmlFor="simulated-item">מוצר לדימוי סריקה</label>
         <select id="simulated-item" value={selectedId} onChange={(event) => setSelectedId(event.target.value)}>
           {CATALOG.map((item) => (
             <option key={item.id} value={item.id}>
@@ -1130,33 +1138,33 @@ function ScannerView({ product, selectedId, setSelectedId, restrictions, onAdd, 
             <span className="diet-pill" key={tag}>{DIETARY_LABELS[tag] || tag}</span>
           ))}
           <span className={compatible ? "diet-pill success" : "diet-pill alert"}>
-            {compatible ? "׳×׳•׳׳ ׳׳₪׳¨׳•׳₪׳™׳" : "׳‘׳“׳§׳™ ׳”׳×׳׳׳•׳×"}
+            {compatible ? "תואם לפרופיל" : "בדקי התאמות"}
           </span>
         </div>
 
         <div className="price-strip">
-          <span>׳׳—׳™׳¨ ׳׳§׳•׳¨׳™</span>
-          <strong>ג‚×{product.price.toFixed(2)}</strong>
+          <span>מחיר מקורי</span>
+          <strong>?{product.price.toFixed(2)}</strong>
         </div>
         <small className="price-disclaimer scanner-disclaimer">
-          ׳”׳׳—׳™׳¨ ׳׳‘׳•׳¡׳¡ ׳¢׳ ׳‘׳“׳™׳§׳•׳× ׳׳—׳¨׳•׳ ׳•׳× ׳•׳¢׳©׳•׳™ ׳׳”׳©׳×׳ ׳•׳× ׳׳₪׳™ ׳¡׳ ׳™׳£, ׳׳‘׳¦׳¢, ׳–׳׳™׳ ׳•׳× ׳•׳¢׳“׳›׳•׳ ׳™ ׳¡׳₪׳§׳™׳.
+          המחיר מבוסס על בדיקות אחרונות ועשוי להשתנות לפי סניף, מבצע, זמינות ועדכוני ספקים.
         </small>
 
         {product.alternative && (
           <div className="swap-widget">
-            <p className="kicker">׳ ׳¡׳™ ׳׳× ׳–׳” ׳‘׳׳§׳•׳</p>
+            <p className="kicker">נסי את זה במקום</p>
             <h3>{product.alternative.name}</h3>
             <p>{product.alternative.insight}</p>
             <div className="compare-grid">
-              <span>׳‘׳¨׳™׳׳•׳× {product.health} &rarr; {product.alternative.health}</span>
-              <span>ג‚×{product.price.toFixed(2)} &rarr; ג‚×{product.alternative.price.toFixed(2)}</span>
+              <span>בריאות {product.health} &rarr; {product.alternative.health}</span>
+              <span>?{product.price.toFixed(2)} &rarr; ?{product.alternative.price.toFixed(2)}</span>
             </div>
           </div>
         )}
 
         <div className="button-row">
           <button className="ghost-button" onClick={() => onAdd(product, false)} type="button">
-            ׳”׳•׳¡׳™׳₪׳™ ׳׳§׳•׳¨׳™
+            הוסיפי מקורי
           </button>
           <button
             className="primary-button swap-button"
@@ -1164,7 +1172,7 @@ function ScannerView({ product, selectedId, setSelectedId, restrictions, onAdd, 
             onClick={() => onAdd(product, true)}
             type="button"
           >
-            ׳”׳—׳׳₪׳” ׳•׳—׳™׳¡׳›׳•׳
+            החלפה וחיסכון
           </button>
         </div>
       </div>
@@ -1180,28 +1188,28 @@ function HomeView({ budget, spent, saved, progress, emoji, avatarBg, onCatalog, 
     <section className="home-mobile-shell">
       <header className="home-appbar">
         <div className="home-brand">
-          <span className="material-fallback">נ›’</span>
+          <span className="material-fallback">🛒</span>
           <h1>SmartCart</h1>
         </div>
         <button className={`home-avatar avatar-bg-${avatarBg || "mint"}`} onClick={() => onNavigate("profile")} type="button">
-          {emoji || "נ›’"}
+          {emoji || "🛒"}
         </button>
       </header>
 
       <main className="home-content">
         <section className="home-greeting">
-          <h2>׳©׳׳•׳ ׳׳׳™</h2>
-          <p>׳׳•׳›׳ ׳” ׳׳§׳ ׳™׳™׳” ׳—׳›׳׳” ׳•׳׳•׳“׳¢׳× ׳”׳™׳•׳?</p>
+          <h2>שלום מאי</h2>
+          <p>מוכנה לקנייה חכמה ומודעת היום?</p>
         </section>
 
         <section className="home-budget-card">
           <div>
-            <p>׳×׳§׳¦׳™׳‘ ׳—׳•׳“׳©׳™</p>
+            <p>תקציב חודשי</p>
             <h3>
-              ג‚×{remaining.toFixed(0)}
-              <span>׳ ׳•׳×׳¨׳•</span>
+              ?{remaining.toFixed(0)}
+              <span>נותרו</span>
             </h3>
-            <small>׳ ׳—׳¡׳›׳• ג‚×{saved.toFixed(0)} ׳׳”׳—׳׳₪׳•׳× ׳—׳›׳׳•׳×</small>
+            <small>נחסכו ?{saved.toFixed(0)} מהחלפות חכמות</small>
           </div>
           <div className="home-ring">
             <svg viewBox="0 0 88 88">
@@ -1213,37 +1221,37 @@ function HomeView({ budget, spent, saved, progress, emoji, avatarBg, onCatalog, 
         </section>
 
         <button className="home-primary-action" onClick={() => onNavigate("setup")} type="button">
-          <span>נ›’</span>
-          ׳”׳×׳—׳™׳׳™ ׳§׳ ׳™׳™׳”
+          <span>🛒</span>
+          התחילי קנייה
         </button>
         <button className="home-secondary-action" onClick={onCatalog} type="button">
-          + ׳₪׳×׳—׳™ ׳§׳˜׳׳•׳’ ׳•׳”׳•׳¡׳™׳₪׳™ ׳׳•׳¦׳¨
+          + פתחי קטלוג והוסיפי מוצר
         </button>
 
         <section className="home-quick-grid">
           <button onClick={onCatalog} type="button">
             <span>ן¼‹</span>
-            ׳”׳•׳¡׳₪׳× ׳׳•׳¦׳¨
+            הוספת מוצר
           </button>
           <button onClick={() => onNavigate("scanner")} type="button">
             <span>ג–¦</span>
-            ׳¡׳¨׳™׳§׳× ׳‘׳¨׳§׳•׳“
+            סריקת ברקוד
           </button>
           <button onClick={() => onNavigate("list")} type="button">
             <span>ג˜‘</span>
-            ׳¦׳₪׳™׳™׳” ׳‘׳¨׳©׳™׳׳•׳×
+            צפייה ברשימות
           </button>
           <button onClick={() => onNavigate("dashboard")} type="button">
-            <span>ג—</span>
-            ׳×׳•׳‘׳ ׳•׳×
+            <span>◌</span>
+            תובנות
           </button>
         </section>
 
         <section className="home-tip-card">
-          <div className="home-tip-image">נ¥¬</div>
+          <div className="home-tip-image">🥬</div>
           <div>
-            <h4>׳˜׳™׳₪ ׳©׳‘׳•׳¢׳™</h4>
-            <p>׳׳¢׳‘׳¨ ׳׳—׳׳•׳₪׳× SmartBrand ׳™׳›׳•׳ ׳׳—׳¡׳•׳ ׳׳ ׳¢׳“ ג‚×15 ׳‘׳§׳ ׳™׳™׳” ׳”׳§׳¨׳•׳‘׳”.</p>
+            <h4>טיפ שבועי</h4>
+            <p>מעבר לחלופת SmartBrand יכול לחסוך לך עד ₪15 בקנייה הקרובה.</p>
           </div>
           <button onClick={() => onNavigate("dashboard")} type="button">ג€¹</button>
         </section>
@@ -1251,24 +1259,24 @@ function HomeView({ budget, spent, saved, progress, emoji, avatarBg, onCatalog, 
 
       <nav className="home-bottom-nav">
         <button className="active" onClick={() => onNavigate("home")} type="button">
-          <span>ג‚</span>
-          ׳‘׳™׳×
+          <span>⌂</span>
+          בית
         </button>
         <button onClick={() => onNavigate("dashboard")} type="button">
           <span>ג—«</span>
-          ׳“׳©׳‘׳•׳¨׳“
+          דשבורד
         </button>
         <button className="scan-fab" onClick={() => onNavigate("setup")} type="button">
           <span>ג–¦</span>
-          ׳¡׳¨׳™׳§׳”
+          סריקה
         </button>
         <button onClick={() => onNavigate("list")} type="button">
           <span>ג˜‘</span>
-          ׳¨׳©׳™׳׳•׳×
+          רשימות
         </button>
         <button onClick={() => onNavigate("profile")} type="button">
-          <span>ג—</span>
-          ׳₪׳¨׳•׳₪׳™׳
+          <span>●</span>
+          פרופיל
         </button>
       </nav>
     </section>
@@ -1280,11 +1288,11 @@ function SmartLearningList({ learning, onOpenList, onOpenInsights }) {
     <section className="learning-panel glass-panel">
       <div className="section-heading">
         <div>
-          <h2>׳¨׳©׳™׳׳× ׳§׳ ׳™׳•׳× ׳¡׳˜׳ ׳“׳¨׳˜׳™׳× ׳•׳—׳›׳׳”</h2>
+          <h2>רשימת קניות סטנדרטית וחכמה</h2>
         </div>
         <div className="button-row">
-          <button className="ghost-button" onClick={onOpenList} type="button">׳₪׳×׳—׳™ ׳¨׳©׳™׳׳”</button>
-          <button className="primary-button" onClick={onOpenInsights} type="button">׳¨׳׳™ ׳×׳•׳‘׳ ׳•׳×</button>
+          <button className="ghost-button" onClick={onOpenList} type="button">פתחי רשימה</button>
+          <button className="primary-button" onClick={onOpenInsights} type="button">ראי תובנות</button>
         </div>
       </div>
 
@@ -1301,9 +1309,9 @@ function SmartLearningList({ learning, onOpenList, onOpenInsights }) {
       </div>
 
       <div className="learning-summary">
-        <span>׳§׳˜׳’׳•׳¨׳™׳” ׳׳•׳‘׳™׳׳”: <b>{learning.favoriteCategoryLabel}</b></span>
-        <span>׳”׳׳¢׳¨׳›׳× ׳–׳™׳”׳×׳” <b>{learning.swapRate}%</b> ׳ ׳˜׳™׳™׳” ׳׳”׳—׳׳₪׳•׳× ׳—׳™׳¡׳›׳•׳</span>
-        <span>׳—׳™׳¡׳›׳•׳ ׳¦׳₪׳•׳™ ׳׳§׳ ׳™׳™׳” ׳”׳‘׳׳”: <b>ג‚×{learning.projectedSavings}</b></span>
+        <span>קטגוריה מובילה: <b>{learning.favoriteCategoryLabel}</b></span>
+        <span>המערכת זיהתה <b>{learning.swapRate}%</b> נטייה להחלפות חיסכון</span>
+        <span>חיסכון צפוי לקנייה הבאה: <b>?{learning.projectedSavings}</b></span>
       </div>
     </section>
   );
@@ -1311,42 +1319,42 @@ function SmartLearningList({ learning, onOpenList, onOpenInsights }) {
 
 function SetupView({ budget, supermarket, onSelectStore, onStart }) {
   const stores = [
-    ["׳©׳•׳₪׳¨׳¡׳", "0.4 ׳§׳´׳", "shopping_cart"],
-    ["׳¨׳׳™ ׳׳•׳™", "1.2 ׳§׳´׳", "local_mall"],
-    ["׳™׳•׳—׳ ׳ ׳•׳£", "1.5 ׳§׳´׳", "shopping_cart"],
-    ["׳•׳™׳§׳˜׳•׳¨׳™", "1.8 ׳§׳´׳", "shopping_cart"],
-    ["׳§׳¨׳₪׳•׳¨", "2.0 ׳§׳´׳", "shopping_cart"],
-    ["׳™׳™׳ ׳•׳× ׳‘׳™׳×׳", "2.3 ׳§׳´׳", "shopping_cart"],
-    ["׳׳’׳” ׳‘׳¢׳™׳¨", "2.5 ׳§׳´׳", "shopping_cart"],
-    ["׳׳—׳¡׳ ׳™ ׳”׳©׳•׳§", "2.8 ׳§׳´׳", "shopping_cart"],
-    ["׳—׳¦׳™ ׳—׳™׳ ׳", "3.0 ׳§׳´׳", "shopping_cart"],
-    ["׳׳•׳©׳¨ ׳¢׳“", "3.4 ׳§׳´׳", "shopping_cart"],
-    ["׳˜׳™׳‘ ׳˜׳¢׳", "3.6 ׳§׳´׳", "shopping_cart"],
-    ["׳§׳©׳× ׳˜׳¢׳׳™׳", "3.9 ׳§׳´׳", "shopping_cart"],
-    ["׳₪׳¨׳©׳׳¨׳§׳˜", "4.1 ׳§׳´׳", "shopping_cart"],
-    ["׳‘׳¨ ׳›׳", "4.3 ׳§׳´׳", "shopping_cart"],
-    ["׳™׳© ׳—׳¡׳“", "4.5 ׳§׳´׳", "shopping_cart"],
-    ["AM:PM", "0.7 ׳§׳´׳", "shopping_cart"],
-    ["׳¡׳•׳₪׳¨ ׳™׳•׳“׳”", "1.0 ׳§׳´׳", "shopping_cart"],
-    ["yellow", "1.6 ׳§׳´׳", "shopping_cart"],
-    ["׳¡׳™׳˜׳™ ׳׳¨׳§׳˜", "2.2 ׳§׳´׳", "shopping_cart"],
-    ["׳”׳•׳¡׳₪׳× ׳¡׳•׳₪׳¨", "׳׳™׳§׳•׳ ׳™׳“׳ ׳™", "add"],
+    ["שופרסל", "0.4 ק״מ", "shopping_cart"],
+    ["רמי לוי", "1.2 ק״מ", "local_mall"],
+    ["יוחננוף", "1.5 ק״מ", "shopping_cart"],
+    ["ויקטורי", "1.8 ק״מ", "shopping_cart"],
+    ["קרפור", "2.0 ק״מ", "shopping_cart"],
+    ["יינות ביתן", "2.3 ק״מ", "shopping_cart"],
+    ["מגה בעיר", "2.5 ק״מ", "shopping_cart"],
+    ["מחסני השוק", "2.8 ק״מ", "shopping_cart"],
+    ["חצי חינם", "3.0 ק״מ", "shopping_cart"],
+    ["אושר עד", "3.4 ק״מ", "shopping_cart"],
+    ["טיב טעם", "3.6 ק״מ", "shopping_cart"],
+    ["קשת טעמים", "3.9 ק״מ", "shopping_cart"],
+    ["פרשמרקט", "4.1 ק״מ", "shopping_cart"],
+    ["בר כל", "4.3 ק״מ", "shopping_cart"],
+    ["יש חסד", "4.5 ק״מ", "shopping_cart"],
+    ["AM:PM", "0.7 ק״מ", "shopping_cart"],
+    ["סופר יודה", "1.0 ק״מ", "shopping_cart"],
+    ["yellow", "1.6 ק״מ", "shopping_cart"],
+    ["סיטי מרקט", "2.2 ק״מ", "shopping_cart"],
+    ["הוספת סופר", "מיקום ידני", "add"],
   ];
 
   return (
     <section className="setup-page">
       <div className="setup-heading">
-        <h2>׳‘׳•׳׳™ ׳ ׳×׳›׳•׳ ׳.</h2>
-        <p>׳”׳’׳“׳™׳¨׳™ ׳׳× ׳”׳§׳ ׳™׳™׳” ׳›׳“׳™ ׳©ײ¾SmartCart ׳™׳—׳¡׳•׳ ׳׳ ׳–׳׳ ׳•׳›׳¡׳£.</p>
+        <h2>בואי נתכונן.</h2>
+        <p>הגדירי את הקנייה כדי ש־SmartCart יחסוך לך זמן וכסף.</p>
       </div>
 
       <div className="setup-grid">
         <article className="setup-card setup-store">
           <div className="setup-card-title">
-            <span>נ¬</span>
-            <h3>׳‘׳—׳™׳¨׳× ׳¡׳•׳₪׳¨</h3>
+            <span>🏬</span>
+            <h3>בחירת סופר</h3>
           </div>
-          <input placeholder="׳—׳™׳₪׳•׳© ׳¡׳•׳₪׳¨..." />
+          <input placeholder="חיפוש סופר..." />
           <div className="store-grid">
             {stores.map(([name, distance, icon]) => (
               <button
@@ -1355,12 +1363,12 @@ function SetupView({ budget, supermarket, onSelectStore, onStart }) {
                 onClick={() => icon !== "add" && onSelectStore(name)}
                 type="button"
               >
-                <span>{icon === "add" ? "+" : "נ›’"}</span>
+                <span>{icon === "add" ? "+" : "🛒"}</span>
                 <div>
                   <strong>{name}</strong>
                   <small>{distance}</small>
                 </div>
-                {name === supermarket && <b>ג“</b>}
+                {name === supermarket && <b>✓</b>}
               </button>
             ))}
           </div>
@@ -1369,29 +1377,29 @@ function SetupView({ budget, supermarket, onSelectStore, onStart }) {
         <div className="setup-side">
           <article className="setup-card">
             <div className="setup-card-title">
-              <span>ג‚×</span>
-              <h3>׳×׳§׳¦׳™׳‘</h3>
+              <span>?</span>
+              <h3>תקציב</h3>
             </div>
-            <p>׳׳•׳׳׳¥ ׳׳₪׳™ ג‚×{budget} ׳©׳ ׳•׳×׳¨׳• ׳”׳—׳•׳“׳©.</p>
+            <p>מומלץ לפי ?{budget} שנותרו החודש.</p>
             <div className="setup-budget-input">
-              <strong>ג‚×</strong>
+              <strong>?</strong>
               <input defaultValue="350" type="number" />
             </div>
             <input className="setup-range" defaultValue="35" type="range" />
             <div className="range-labels">
-              <span>ג‚×50</span>
-              <span>ג‚×1,000</span>
+              <span>?50</span>
+              <span>?1,000</span>
             </div>
           </article>
 
           <article className="setup-card">
             <div className="setup-card-title">
-              <span>ג±</span>
-              <h3>׳™׳¢׳“ ׳–׳׳</h3>
+              <span>⏱</span>
+              <h3>יעד זמן</h3>
             </div>
             <div className="time-options">
-              {["15 ׳“׳§׳³", "30 ׳“׳§׳³", "45 ׳“׳§׳³", "60 ׳“׳§׳³"].map((time) => (
-                <button className={time === "30 ׳“׳§׳³" ? "selected" : ""} key={time} type="button">
+              {["15 דק׳", "30 דק׳", "45 דק׳", "60 דק׳"].map((time) => (
+                <button className={time === "30 דק׳" ? "selected" : ""} key={time} type="button">
                   {time}
                 </button>
               ))}
@@ -1403,8 +1411,8 @@ function SetupView({ budget, supermarket, onSelectStore, onStart }) {
           <div>
             <span>ג˜‘</span>
             <div>
-              <h3>׳©׳™׳׳•׳© ׳‘׳¨׳©׳™׳׳× ׳§׳ ׳™׳•׳× ׳§׳™׳™׳׳×</h3>
-              <p>׳˜׳¢׳™׳ ׳” ׳׳•׳˜׳•׳׳˜׳™׳× ׳©׳ ג€׳§׳ ׳™׳•׳× ׳©׳‘׳•׳¢׳™׳•׳×ג€ ׳¢׳ 12 ׳₪׳¨׳™׳˜׳™׳.</p>
+              <h3>שימוש ברשימת קניות קיימת</h3>
+              <p>טעינה אוטומטית של “קניות שבועיות” עם 12 פריטים.</p>
             </div>
           </div>
           <label className="switch">
@@ -1416,9 +1424,9 @@ function SetupView({ budget, supermarket, onSelectStore, onStart }) {
 
       <div className="setup-cta">
         <button className="home-primary-action" onClick={onStart} type="button">
-          נ›’ ׳”׳×׳—׳™׳׳™ ׳§׳ ׳™׳™׳”
+          🛒 התחילי קנייה
         </button>
-        <p>SmartCart ׳×׳¡׳“׳¨ ׳׳ ׳׳¡׳׳•׳ ׳—׳›׳ ׳׳₪׳™ ׳”׳¨׳©׳™׳׳” ׳•׳”׳×׳§׳¦׳™׳‘.</p>
+        <p>SmartCart תסדר לך מסלול חכם לפי הרשימה והתקציב.</p>
       </div>
     </section>
   );
@@ -1429,19 +1437,19 @@ function ShoppingListView({ categoryGroups, spent, saved, budget, progress, warn
     <section className="list-layout">
       <div className={warning ? "budget-console glass-panel warning" : "budget-console glass-panel"}>
         <div>
-          <p className="kicker">׳×׳§׳¦׳™׳‘ ׳‘׳–׳׳ ׳׳׳×</p>
-          <h2>ג‚×{spent.toFixed(2)} ׳ ׳•׳¦׳׳•</h2>
-          <span>׳׳×׳•׳ ׳׳’׳‘׳׳” ׳©׳ ג‚×{budget} - ׳ ׳—׳¡׳›׳• ג‚×{saved.toFixed(2)} ׳׳”׳—׳׳₪׳•׳×</span>
+          <p className="kicker">תקציב בזמן אמת</p>
+          <h2>?{spent.toFixed(2)} נוצלו</h2>
+          <span>מתוך מגבלה של ?{budget} - נחסכו ?{saved.toFixed(2)} מהחלפות</span>
         </div>
         <div className="budget-bar">
           <i style={{ width: `${progress}%` }} />
         </div>
-        {warning && <strong className="warning-copy">׳׳–׳”׳¨׳”: ׳¢׳‘׳¨׳× 85% ׳׳”׳×׳§׳¦׳™׳‘ ׳©׳”׳•׳’׳“׳¨.</strong>}
+        {warning && <strong className="warning-copy">אזהרה: עברת 85% מהתקציב שהוגדר.</strong>}
       </div>
 
       <div className="list-toolbar">
-        <h2>׳¦'׳§׳׳™׳¡׳˜ ׳§׳ ׳™׳•׳× ׳׳™׳ ׳˜׳¨׳׳§׳˜׳™׳‘׳™</h2>
-        <button className="primary-button" onClick={onCatalog} type="button">׳”׳•׳¡׳₪׳” ׳׳”׳§׳˜׳׳•׳’</button>
+        <h2>צ'קליסט קניות אינטראקטיבי</h2>
+        <button className="primary-button" onClick={onCatalog} type="button">הוספה מהקטלוג</button>
       </div>
 
       <div className="category-stack">
@@ -1457,9 +1465,9 @@ function ShoppingListView({ categoryGroups, spent, saved, budget, progress, warn
                     <small>{item.brand} - health {item.health}</small>
                   </span>
                 </label>
-                {item.swapped && <em>׳”׳—׳׳₪׳× ׳×׳§׳¦׳™׳‘ ׳‘׳•׳¦׳¢׳” -ג‚×{item.saved.toFixed(2)}</em>}
-                <b>ג‚×{item.selectedPrice.toFixed(2)}</b>
-                <button onClick={() => onRemove(item.id)} type="button">׳”׳¡׳¨׳”</button>
+                {item.swapped && <em>החלפת תקציב בוצעה -?{item.saved.toFixed(2)}</em>}
+                <b>?{item.selectedPrice.toFixed(2)}</b>
+                <button onClick={() => onRemove(item.id)} type="button">הסרה</button>
               </article>
             ))}
           </div>
@@ -1485,10 +1493,10 @@ function DashboardView({ learning, onReceipt, onReferral }) {
       <div className="chart-panel glass-panel">
         <div className="section-heading">
           <div>
-            <p className="kicker">׳”׳©׳•׳•׳׳” ׳©׳‘׳•׳¢׳™׳× ׳•׳—׳•׳“׳©׳™׳×</p>
-            <h2>׳§׳ ׳™׳•׳× ׳׳•׳ ׳—׳™׳¡׳›׳•׳ ׳‘׳₪׳•׳¢׳</h2>
+            <p className="kicker">השוואה שבועית וחודשית</p>
+            <h2>קניות מול חיסכון בפועל</h2>
           </div>
-          <button className="ghost-button" onClick={onReferral} type="button">׳×׳•׳›׳ ׳™׳× ׳©׳™׳×׳•׳£</button>
+          <button className="ghost-button" onClick={onReferral} type="button">תוכנית שיתוף</button>
         </div>
         <ResponsiveContainer height={320} width="100%">
           <AreaChart data={CHART_DATA}>
@@ -1514,8 +1522,8 @@ function DashboardView({ learning, onReceipt, onReferral }) {
             <span>{trip.date}</span>
             <strong>{trip.store}</strong>
             <div>
-              <b>ג‚×{trip.purchases}</b>
-              <em>׳ ׳—׳¡׳›׳• ג‚×{trip.savings}</em>
+              <b>?{trip.purchases}</b>
+              <em>נחסכו ?{trip.savings}</em>
             </div>
           </button>
         ))}
@@ -1525,22 +1533,22 @@ function DashboardView({ learning, onReceipt, onReferral }) {
 }
 
 function ProfileView({ profile, onUpdate, onToggleRestriction, onInvite }) {
-  const faceOptions = ["נ˜", "נ˜", "נ₪“", "נ˜", "נ™‚", "נ˜„", "נ₪©", "נ¥°"];
+  const faceOptions = ["😊", "😎", "🤓", "😍", "🙂", "😄", "🤩", "🥰"];
   const backgroundOptions = [
-    ["mint", "׳׳ ׳˜׳”"],
-    ["violet", "׳¡׳’׳•׳"],
-    ["sky", "׳©׳׳™׳™׳"],
-    ["peach", "׳׳₪׳¨׳¡׳§"],
+    ["mint", "מנטה"],
+    ["violet", "סגול"],
+    ["sky", "שמיים"],
+    ["peach", "אפרסק"],
   ];
 
   return (
     <section className="profile-layout">
       <div className="profile-card glass-panel">
         <div className="avatar-picker">
-          <div className={`avatar-orb avatar-bg-${profile.avatarBg || "mint"}`}>{profile.emoji || "נ˜"}</div>
+          <div className={`avatar-orb avatar-bg-${profile.avatarBg || "mint"}`}>{profile.emoji || "😊"}</div>
           <div className="avatar-builder">
-            <p>׳‘׳—׳™׳¨׳× ׳׳•׳•׳˜׳׳¨</p>
-            <div className="emoji-options" aria-label="׳‘׳—׳™׳¨׳× ׳׳•׳•׳˜׳׳¨">
+            <p>בחירת אווטאר</p>
+            <div className="emoji-options" aria-label="בחירת אווטאר">
               {faceOptions.map((emoji) => (
                 <button
                   className={profile.emoji === emoji ? "emoji-option active" : "emoji-option"}
@@ -1552,8 +1560,8 @@ function ProfileView({ profile, onUpdate, onToggleRestriction, onInvite }) {
                 </button>
               ))}
             </div>
-            <p>׳¦׳‘׳¢ ׳¨׳§׳¢</p>
-            <div className="avatar-bg-options" aria-label="׳‘׳—׳™׳¨׳× ׳¦׳‘׳¢ ׳¨׳§׳¢ ׳׳׳•׳•׳˜׳׳¨">
+            <p>צבע רקע</p>
+            <div className="avatar-bg-options" aria-label="בחירת צבע רקע לאווטאר">
               {backgroundOptions.map(([value, label]) => (
               <button
                 className={profile.avatarBg === value ? `avatar-bg-option avatar-bg-${value} active` : `avatar-bg-option avatar-bg-${value}`}
@@ -1562,7 +1570,7 @@ function ProfileView({ profile, onUpdate, onToggleRestriction, onInvite }) {
                 type="button"
                 title={label}
               >
-                {profile.emoji || "נ˜"}
+                {profile.emoji || "😊"}
               </button>
               ))}
             </div>
@@ -1570,12 +1578,12 @@ function ProfileView({ profile, onUpdate, onToggleRestriction, onInvite }) {
         </div>
         <div className="profile-form">
           {[
-            ["firstName", "׳©׳ ׳₪׳¨׳˜׳™"],
-            ["lastName", "׳©׳ ׳׳©׳₪׳—׳”"],
-            ["email", "׳׳™׳׳™׳™׳ ׳¨׳׳©׳™"],
-            ["address", "׳›׳×׳•׳‘׳×"],
-            ["budget", "׳™׳¢׳“ ׳×׳§׳¦׳™׳‘ ׳—׳•׳“׳©׳™"],
-            ["supermarket", "׳¡׳•׳₪׳¨ ׳׳•׳¢׳“׳£"],
+            ["firstName", "שם פרטי"],
+            ["lastName", "שם משפחה"],
+            ["email", "אימייל ראשי"],
+            ["address", "כתובת"],
+            ["budget", "יעד תקציב חודשי"],
+            ["supermarket", "סופר מועדף"],
           ].map(([field, label]) => (
             <label key={field}>
               <span>{label}</span>
@@ -1590,7 +1598,7 @@ function ProfileView({ profile, onUpdate, onToggleRestriction, onInvite }) {
       </div>
 
       <div className="profile-side glass-panel">
-        <h2>׳”׳¢׳“׳₪׳•׳× ׳×׳–׳•׳ ׳”</h2>
+        <h2>העדפות תזונה</h2>
         <div className="tag-selector">
           {RESTRICTIONS.map((tag) => (
             <button
@@ -1605,8 +1613,8 @@ function ProfileView({ profile, onUpdate, onToggleRestriction, onInvite }) {
         </div>
 
         <div className="household-head">
-          <h2>׳׳©׳§ ׳‘׳™׳×</h2>
-          <button className="primary-button" onClick={onInvite} type="button">+ ׳”׳•׳¡׳₪׳× ׳׳“׳</button>
+          <h2>משק בית</h2>
+          <button className="primary-button" onClick={onInvite} type="button">+ הוספת אדם</button>
         </div>
         {profile.household.map((member) => (
           <div className="member-row" key={member.name}>
@@ -1639,14 +1647,14 @@ function CatalogDrawer({ isOpen, onClose, onAdd }) {
     if (!name || Number.isNaN(price) || price <= 0) return;
     onAdd({
       id: `manual-${Date.now()}`,
-      upc: "׳™׳“׳ ׳™",
+      upc: "ידני",
       name,
-      brand: "׳׳•׳¦׳¨ ׳©׳”׳•׳¡׳£ ׳™׳“׳ ׳™׳×",
+      brand: "מוצר שהוסף ידנית",
       category: manualCategory,
       price,
       health: "B",
       dietary: ["Vegetarian"],
-      image: produceImage("נ›’"),
+      image: produceImage("🛒"),
       alternative: null,
     }, false);
     setManualName("");
@@ -1657,12 +1665,12 @@ function CatalogDrawer({ isOpen, onClose, onAdd }) {
       <aside className="drawer glass-panel" onClick={(event) => event.stopPropagation()}>
         <div className="section-heading">
           <div>
-            <p className="kicker">׳§׳˜׳׳•׳’ ׳”׳¡׳•׳₪׳¨</p>
-            <h2>׳—׳™׳₪׳•׳© ׳•׳”׳•׳¡׳₪׳× ׳׳•׳¦׳¨׳™׳</h2>
+            <p className="kicker">קטלוג הסופר</p>
+            <h2>חיפוש והוספת מוצרים</h2>
           </div>
           <button className="icon-button" onClick={onClose} type="button">X</button>
         </div>
-        <input placeholder="׳—׳™׳₪׳•׳© ׳‘׳§׳˜׳׳•׳’" value={query} onChange={(event) => setQuery(event.target.value)} />
+        <input placeholder="חיפוש בקטלוג" value={query} onChange={(event) => setQuery(event.target.value)} />
         <div className="tag-selector">
           {categories.map(([tag, label]) => (
             <button className={category === tag ? "tag active" : "tag"} key={tag} onClick={() => setCategory(tag)} type="button">
@@ -1672,12 +1680,12 @@ function CatalogDrawer({ isOpen, onClose, onAdd }) {
         </div>
         <div className="manual-product-form">
           <div>
-            <p className="kicker">׳”׳•׳¡׳₪׳” ׳™׳“׳ ׳™׳×</p>
-            <h3>׳׳•׳¦׳¨ ׳©׳׳ ׳§׳™׳™׳ ׳‘׳§׳˜׳׳•׳’</h3>
+            <p className="kicker">הוספה ידנית</p>
+            <h3>מוצר שלא קיים בקטלוג</h3>
           </div>
-          <input placeholder="׳©׳ ׳׳•׳¦׳¨" value={manualName} onChange={(event) => setManualName(event.target.value)} />
+          <input placeholder="שם מוצר" value={manualName} onChange={(event) => setManualName(event.target.value)} />
           <div className="manual-product-row">
-            <input min="0" placeholder="׳׳—׳™׳¨" step="0.1" type="number" value={manualPrice} onChange={(event) => setManualPrice(event.target.value)} />
+            <input min="0" placeholder="מחיר" step="0.1" type="number" value={manualPrice} onChange={(event) => setManualPrice(event.target.value)} />
             <select value={manualCategory} onChange={(event) => setManualCategory(event.target.value)}>
               {categoryOptions.map(([key, label]) => (
                 <option key={key} value={key}>{label}</option>
@@ -1685,10 +1693,10 @@ function CatalogDrawer({ isOpen, onClose, onAdd }) {
             </select>
           </div>
           <button className="primary-button" disabled={!manualName.trim() || Number(manualPrice) <= 0} onClick={addManualProduct} type="button">
-            ׳”׳•׳¡׳₪׳× ׳׳•׳¦׳¨ ׳—׳“׳©
+            הוספת מוצר חדש
           </button>
           <small className="price-disclaimer">
-            ׳”׳׳—׳™׳¨ ׳©׳׳•׳₪׳™׳¢ ׳‘׳׳×׳¨ ׳׳‘׳•׳¡׳¡ ׳¢׳ ׳‘׳“׳™׳§׳•׳× ׳׳—׳¨׳•׳ ׳•׳× ׳•׳¢׳©׳•׳™ ׳׳”׳™׳•׳× ׳©׳•׳ ׳” ׳׳”׳׳—׳™׳¨ ׳”׳׳׳™׳×׳™ ׳‘׳©׳•׳§ ׳‘׳’׳׳ ׳׳‘׳¦׳¢׳™׳, ׳¡׳ ׳™׳₪׳™׳, ׳–׳׳™׳ ׳•׳×, ׳¢׳“׳›׳•׳ ׳™ ׳¡׳₪׳§׳™׳ ׳•׳¡׳™׳‘׳•׳× ׳ ׳•׳¡׳₪׳•׳×.
+            המחיר שמופיע באתר מבוסס על בדיקות אחרונות ועשוי להיות שונה מהמחיר האמיתי בשוק בגלל מבצעים, סניפים, זמינות, עדכוני ספקים וסיבות נוספות.
           </small>
         </div>
         <div className="drawer-list">
@@ -1696,9 +1704,9 @@ function CatalogDrawer({ isOpen, onClose, onAdd }) {
             <article key={item.id}>
               <div>
                 <strong>{item.name}</strong>
-              <span>{CATEGORY_LABELS[item.category] || item.category} - ג‚×{item.price.toFixed(2)}</span>
+              <span>{CATEGORY_LABELS[item.category] || item.category} - ?{item.price.toFixed(2)}</span>
               </div>
-              <button onClick={() => onAdd(item, false)} type="button">׳”׳•׳¡׳₪׳”</button>
+              <button onClick={() => onAdd(item, false)} type="button">הוספה</button>
             </article>
           ))}
         </div>
@@ -1716,20 +1724,20 @@ function ReceiptDrawer({ receipt, onClose }) {
             <div className="section-heading">
               <div>
                 <p className="kicker">{receipt.date}</p>
-                <h2>׳—׳©׳‘׳•׳ ׳™׳× {receipt.store}</h2>
+                <h2>חשבונית {receipt.store}</h2>
               </div>
               <button className="icon-button" onClick={onClose} type="button">X</button>
             </div>
             {receipt.items.map(([name, price, discount]) => (
               <article className="receipt-line" key={name}>
                 <span>{name}</span>
-                <b>ג‚×{price.toFixed(2)}</b>
-                <em>-ג‚×{discount.toFixed(2)}</em>
+                <b>?{price.toFixed(2)}</b>
+                <em>-?{discount.toFixed(2)}</em>
               </article>
             ))}
             <div className="receipt-score">
               <strong>{Math.round((receipt.savings / receipt.purchases) * 100)}%</strong>
-              <span>׳¦׳™׳•׳ ׳—׳™׳¡׳›׳•׳</span>
+              <span>ציון חיסכון</span>
             </div>
           </>
         )}
@@ -1745,11 +1753,11 @@ function ReferralModal({ isOpen, onClose, onSubmit }) {
     <div className="modal-backdrop">
       <div className="modal-card glass-panel">
         <button className="icon-button" onClick={onClose} type="button">X</button>
-        <p className="kicker">׳©׳™׳×׳•׳£ ׳—׳›׳</p>
-        <h2>׳”׳–׳׳ ׳× ׳©׳•׳×׳£/׳” ׳׳§׳ ׳™׳•׳×</h2>
-        <p>׳”׳›׳ ׳™׳¡׳™ ׳׳™׳׳™׳™׳ ׳׳׳™׳ ׳›׳“׳™ ׳׳₪׳×׳•׳— ׳×׳•׳‘׳ ׳•׳× ׳—׳©׳‘׳•׳ ׳™׳× ׳׳©׳•׳×׳₪׳•׳×.</p>
+        <p className="kicker">שיתוף חכם</p>
+        <h2>הזמנת שותף/ה לקניות</h2>
+        <p>הכניסי אימייל אמין כדי לפתוח תובנות חשבונית משותפות.</p>
         <input placeholder="family@domain.com" value={email} onChange={(event) => setEmail(event.target.value)} />
-        <button className="primary-button" onClick={() => onSubmit(email)} type="button">׳©׳׳™׳—׳× ׳”׳–׳׳ ׳”</button>
+        <button className="primary-button" onClick={() => onSubmit(email)} type="button">שליחת הזמנה</button>
       </div>
     </div>
   );
@@ -1757,22 +1765,22 @@ function ReferralModal({ isOpen, onClose, onSubmit }) {
 
 function InviteModal({ isOpen, onClose, onSubmit }) {
   const [name, setName] = useState("");
-  const [role, setRole] = useState("׳©׳•׳×׳£/׳”");
+  const [role, setRole] = useState("שותף/ה");
   if (!isOpen) return null;
   return (
     <div className="modal-backdrop">
       <div className="modal-card glass-panel">
         <button className="icon-button" onClick={onClose} type="button">X</button>
-        <p className="kicker">׳׳©׳§ ׳‘׳™׳× ׳׳©׳•׳×׳£</p>
-        <h2>׳”׳•׳¡׳₪׳× ׳׳“׳</h2>
-        <input placeholder="׳©׳ ׳׳׳" value={name} onChange={(event) => setName(event.target.value)} />
+        <p className="kicker">משק בית משותף</p>
+        <h2>הוספת אדם</h2>
+        <input placeholder="שם מלא" value={name} onChange={(event) => setName(event.target.value)} />
         <select value={role} onChange={(event) => setRole(event.target.value)}>
-          <option value="׳©׳•׳×׳£/׳”">׳©׳•׳×׳£/׳”</option>
-          <option value="׳׳ ׳”׳/׳×">׳׳ ׳”׳/׳×</option>
-          <option value="׳§׳•׳ ׳” ׳§׳‘׳•׳¢/׳”">׳§׳•׳ ׳” ׳§׳‘׳•׳¢/׳”</option>
-          <option value="׳™׳׳“/׳”">׳™׳׳“/׳”</option>
+          <option value="שותף/ה">שותף/ה</option>
+          <option value="מנהל/ת">מנהל/ת</option>
+          <option value="קונה קבוע/ה">קונה קבוע/ה</option>
+          <option value="ילד/ה">ילד/ה</option>
         </select>
-        <button className="primary-button" onClick={() => onSubmit(name, role)} type="button">׳”׳•׳¡׳₪׳” ׳׳׳©׳§ ׳”׳‘׳™׳×</button>
+        <button className="primary-button" onClick={() => onSubmit(name, role)} type="button">הוספה למשק הבית</button>
       </div>
     </div>
   );
@@ -1814,15 +1822,15 @@ function GuideAssistant({ isOpen, onToggle, onNavigate }) {
   const [messages, setMessages] = useState([
     {
       from: "bot",
-      text: "׳”׳™׳™, ׳׳ ׳™ ׳”׳¢׳•׳–׳¨ ׳©׳ SmartCart. ׳׳₪׳©׳¨ ׳׳©׳׳•׳ ׳׳•׳×׳™ ׳׳™׳ ׳׳×׳—׳™׳׳™׳ ׳§׳ ׳™׳™׳”, ׳׳™׳ ׳׳•׳¡׳™׳₪׳™׳ ׳׳•׳¦׳¨, ׳׳™׳ ׳׳©׳×׳׳©׳™׳ ׳‘׳¡׳•׳¨׳§, ׳׳™׳₪׳” ׳¨׳•׳׳™׳ ׳×׳§׳¦׳™׳‘ ׳׳• ׳׳™׳ ׳׳©׳ ׳™׳ ׳₪׳¨׳•׳₪׳™׳.",
+      text: "היי, אני העוזר של SmartCart. אפשר לשאול אותי איך מתחילים קנייה, איך מוסיפים מוצר, איך משתמשים בסורק, איפה רואים תקציב או איך משנים פרופיל.",
     },
   ]);
 
   const quickActions = [
-    ["׳׳™׳ ׳׳×׳—׳™׳׳™׳?", "setup"],
-    ["׳׳™׳ ׳׳•׳¡׳™׳₪׳™׳ ׳׳•׳¦׳¨?", "list"],
-    ["׳׳™׳ ׳¡׳•׳¨׳§׳™׳?", "scanner"],
-    ["׳׳” ׳–׳” ׳”׳×׳•׳‘׳ ׳•׳× ׳•׳׳׳” ׳”׳ ׳׳©׳׳©׳•׳×?", "dashboard"],
+    ["איך מתחילים?", "setup"],
+    ["איך מוסיפים מוצר?", "list"],
+    ["איך סורקים?", "scanner"],
+    ["מה זה התובנות ולמה הן משמשות?", "dashboard"],
   ];
 
   async function ask(text = question) {
@@ -1847,17 +1855,17 @@ function GuideAssistant({ isOpen, onToggle, onNavigate }) {
   return (
     <div className="guide-assistant" dir="rtl">
       {isOpen && (
-        <section className="guide-panel glass-panel" aria-label="׳¢׳•׳–׳¨ SmartCart">
+        <section className="guide-panel glass-panel" aria-label="עוזר SmartCart">
           <div className="guide-head">
             <div>
-              <strong>׳¢׳•׳–׳¨ SmartCart</strong>
-              <small>׳”׳“׳¨׳›׳” ׳•׳©׳׳׳•׳× ׳׳׳©׳×׳׳©׳™׳ ׳—׳“׳©׳™׳</small>
+              <strong>עוזר SmartCart</strong>
+              <small>הדרכה ושאלות למשתמשים חדשים</small>
             </div>
-            <span className="ai-badge">׳׳‘׳•׳¡׳¡ AI</span>
+            <span className="ai-badge">מבוסס AI</span>
             <button className="icon-button" onClick={onToggle} type="button">X</button>
           </div>
           <small className="assistant-note">
-            ׳”׳¢׳•׳–׳¨ ׳™׳›׳•׳ ׳׳˜׳¢׳•׳×. ׳׳•׳׳׳¥ ׳׳‘׳“׳•׳§ ׳׳—׳™׳¨׳™׳, ׳׳‘׳¦׳¢׳™׳ ׳•׳׳™׳“׳¢ ׳×׳–׳•׳ ׳×׳™ ׳׳•׳ ׳”׳¡׳•׳₪׳¨ ׳•׳”׳׳•׳¦׳¨ ׳‘׳₪׳•׳¢׳.
+            העוזר יכול לטעות. מומלץ לבדוק מחירים, מבצעים ומידע תזונתי מול הסופר והמוצר בפועל.
           </small>
 
           <div className="guide-messages">
@@ -1871,7 +1879,7 @@ function GuideAssistant({ isOpen, onToggle, onNavigate }) {
                 <span />
                 <span />
                 <span />
-                ׳—׳•׳©׳‘ ׳¨׳’׳¢...
+                חושב רגע...
               </p>
             )}
           </div>
@@ -1899,17 +1907,17 @@ function GuideAssistant({ isOpen, onToggle, onNavigate }) {
             }}
           >
             <input
-              placeholder="׳©׳׳׳™ ׳׳•׳×׳™ ׳׳©׳”׳•..."
+              placeholder="שאלי אותי משהו..."
               disabled={thinking}
               value={question}
               onChange={(event) => setQuestion(event.target.value)}
             />
-            <button disabled={thinking} type="submit">{thinking ? "׳—׳•׳©׳‘..." : "׳©׳׳™׳—׳”"}</button>
+            <button disabled={thinking} type="submit">{thinking ? "חושב..." : "שליחה"}</button>
           </form>
         </section>
       )}
 
-      <button className="guide-fab" onClick={onToggle} type="button" aria-label="׳₪׳×׳™׳—׳× ׳¢׳•׳–׳¨ SmartCart">
+      <button className="guide-fab" onClick={onToggle} type="button" aria-label="פתיחת עוזר SmartCart">
         <span className="help-mark" aria-hidden="true">?</span>
       </button>
     </div>
@@ -1933,93 +1941,93 @@ async function getApiAssistantAnswer(question, history) {
 
 function getAssistantAnswer(question) {
   const text = question.toLowerCase();
-  if (text.includes("׳©׳׳•׳") || text.includes("׳”׳™׳™") || text.includes("׳”׳™ ") || text.includes("׳‘׳•׳§׳¨ ׳˜׳•׳‘") || text.includes("׳¢׳¨׳‘ ׳˜׳•׳‘")) {
+  if (text.includes("שלום") || text.includes("היי") || text.includes("הי ") || text.includes("בוקר טוב") || text.includes("ערב טוב")) {
     return {
       view: null,
-      text: "׳”׳™׳™ ׳׳׳™, ׳׳™׳–׳” ׳›׳™׳£ ׳©׳׳× ׳›׳׳. ׳׳ ׳™ ׳”׳¢׳•׳–׳¨ ׳©׳ SmartCart ׳•׳׳₪׳©׳¨ ׳׳©׳׳•׳ ׳׳•׳×׳™ ׳’׳ ׳¢׳ ׳”׳׳×׳¨ ׳•׳’׳ ׳¡׳×׳ ׳׳™׳ ׳׳”׳×׳—׳™׳ ׳׳”׳©׳×׳׳© ׳‘׳•.",
+      text: "היי מאי, איזה כיף שאת כאן. אני העוזר של SmartCart ואפשר לשאול אותי גם על האתר וגם סתם איך להתחיל להשתמש בו.",
     };
   }
-  if (text.includes("׳׳” ׳§׳•׳¨׳”") || text.includes("׳׳” ׳ ׳©׳׳¢") || text.includes("׳׳” ׳©׳׳•׳׳") || text.includes("׳׳™׳ ׳׳×׳”") || text.includes("׳׳™׳ ׳׳×")) {
+  if (text.includes("מה קורה") || text.includes("מה נשמע") || text.includes("מה שלומך") || text.includes("איך אתה") || text.includes("איך את")) {
     return {
       view: null,
-      text: "׳”׳›׳•׳ ׳˜׳•׳‘, ׳×׳•׳“׳” ׳©׳©׳׳׳×. ׳׳ ׳™ ׳›׳׳ ׳›׳“׳™ ׳׳¢׳–׳•׳¨ ׳׳ ׳׳¢׳©׳•׳× ׳§׳ ׳™׳™׳” ׳—׳›׳׳” ׳™׳•׳×׳¨, ׳׳׳¦׳•׳ ׳׳•׳¦׳¨׳™׳, ׳׳”׳‘׳™׳ ׳×׳•׳‘׳ ׳•׳× ׳•׳׳©׳׳•׳¨ ׳¢׳ ׳”׳×׳§׳¦׳™׳‘.",
+      text: "הכול טוב, תודה ששאלת. אני כאן כדי לעזור לך לעשות קנייה חכמה יותר, למצוא מוצרים, להבין תובנות ולשמור על התקציב.",
     };
   }
-  if (text.includes("׳×׳•׳“׳”") || text.includes("׳×׳•׳“׳” ׳¨׳‘׳”") || text.includes("׳׳׳•׳₪׳”") || text.includes("׳׳¢׳•׳׳”")) {
+  if (text.includes("תודה") || text.includes("תודה רבה") || text.includes("אלופה") || text.includes("מעולה")) {
     return {
       view: null,
-      text: "׳‘׳©׳׳—׳”. ׳׳ ׳™ ׳ ׳©׳׳¨ ׳›׳׳ ׳׳ ׳×׳¨׳¦׳™ ׳¢׳•׳“ ׳¢׳–׳¨׳”, ׳”׳¡׳‘׳¨ ׳¢׳ ׳׳¡׳ ׳׳¡׳•׳™׳ ׳׳• ׳”׳›׳•׳•׳ ׳” ׳‘׳§׳ ׳™׳™׳”.",
+      text: "בשמחה. אני נשאר כאן אם תרצי עוד עזרה, הסבר על מסך מסוים או הכוונה בקנייה.",
     };
   }
-  if (text.includes("׳׳™ ׳׳×׳”") || text.includes("׳׳™ ׳׳×") || text.includes("׳׳” ׳׳×׳”") || text.includes("׳׳” ׳׳×")) {
+  if (text.includes("מי אתה") || text.includes("מי את") || text.includes("מה אתה") || text.includes("מה את")) {
     return {
       view: null,
-      text: "׳׳ ׳™ ׳¢׳•׳–׳¨ ׳”׳”׳“׳¨׳›׳” ׳©׳ SmartCart. ׳׳ ׳™ ׳׳¡׳‘׳™׳¨ ׳׳™׳ ׳׳”׳©׳×׳׳© ׳‘׳׳×׳¨, ׳¢׳•׳–׳¨ ׳׳׳¦׳•׳ ׳₪׳¢׳•׳׳•׳×, ׳•׳׳›׳•׳•׳ ׳׳•׳×׳ ׳׳׳¡׳ ׳”׳ ׳›׳•׳ ׳׳₪׳™ ׳”׳©׳׳׳”.",
+      text: "אני עוזר ההדרכה של SmartCart. אני מסביר איך להשתמש באתר, עוזר למצוא פעולות, ומכוון אותך למסך הנכון לפי השאלה.",
     };
   }
-  if (text.includes("׳׳” ׳׳₪׳©׳¨ ׳׳©׳׳•׳") || text.includes("׳׳” ׳׳×׳” ׳™׳•׳“׳¢") || text.includes("׳¢׳–׳¨׳”") || text.includes("help")) {
+  if (text.includes("מה אפשר לשאול") || text.includes("מה אתה יודע") || text.includes("עזרה") || text.includes("help")) {
     return {
       view: null,
-      text: "׳׳₪׳©׳¨ ׳׳©׳׳•׳ ׳׳•׳×׳™ ׳¢׳ ׳”׳×׳—׳׳× ׳§׳ ׳™׳™׳”, ׳‘׳—׳™׳¨׳× ׳¡׳•׳₪׳¨, ׳¡׳¨׳™׳§׳× ׳׳•׳¦׳¨, ׳”׳•׳¡׳₪׳× ׳׳•׳¦׳¨ ׳™׳“׳ ׳™׳×, ׳×׳§׳¦׳™׳‘, ׳¨׳©׳™׳׳× ׳§׳ ׳™׳•׳×, ׳×׳•׳‘׳ ׳•׳×, ׳₪׳¨׳•׳₪׳™׳, ׳׳•׳•׳˜׳׳¨ ׳•׳׳©׳§ ׳‘׳™׳×.",
+      text: "אפשר לשאול אותי על התחלת קנייה, בחירת סופר, סריקת מוצר, הוספת מוצר ידנית, תקציב, רשימת קניות, תובנות, פרופיל, אווטאר ומשק בית.",
     };
   }
-  if (text.includes("׳׳׳”") && text.includes("smartcart")) {
+  if (text.includes("למה") && text.includes("smartcart")) {
     return {
       view: null,
-      text: "SmartCart ׳ ׳•׳¢׳“׳” ׳׳¢׳–׳•׳¨ ׳׳ ׳׳§׳ ׳•׳× ׳‘׳¦׳•׳¨׳” ׳׳•׳“׳¢׳×: ׳׳”׳‘׳™׳ ׳›׳׳” ׳׳× ׳׳•׳¦׳™׳׳”, ׳׳‘׳—׳•׳¨ ׳—׳׳•׳₪׳•׳× ׳׳©׳×׳׳׳•׳×, ׳•׳׳‘׳ ׳•׳× ׳¨׳©׳™׳׳× ׳§׳ ׳™׳•׳× ׳©׳׳×׳׳™׳׳” ׳׳”׳¨׳’׳׳™׳ ׳©׳ ׳”׳‘׳™׳×.",
+      text: "SmartCart נועדה לעזור לך לקנות בצורה מודעת: להבין כמה את מוציאה, לבחור חלופות משתלמות, ולבנות רשימת קניות שמתאימה להרגלים של הבית.",
     };
   }
-  if (text.includes("׳”׳×׳—") || text.includes("׳§׳ ׳™׳™׳”") || text.includes("׳¡׳•׳₪׳¨")) {
+  if (text.includes("התח") || text.includes("קנייה") || text.includes("סופר")) {
     return {
       view: "setup",
-      text: "׳›׳“׳™ ׳׳”׳×׳—׳™׳ ׳§׳ ׳™׳™׳” ׳׳•׳—׳¦׳™׳ ׳¢׳ '׳”׳×׳—׳™׳׳™ ׳§׳ ׳™׳™׳”', ׳‘׳•׳—׳¨׳™׳ ׳¡׳•׳₪׳¨, ׳׳’׳“׳™׳¨׳™׳ ׳×׳§׳¦׳™׳‘ ׳•׳–׳׳, ׳•׳׳– ׳׳׳©׳™׳›׳™׳ ׳׳¡׳¨׳™׳§׳”.",
+      text: "כדי להתחיל קנייה לוחצים על 'התחילי קנייה', בוחרים סופר, מגדירים תקציב וזמן, ואז ממשיכים לסריקה.",
     };
   }
-  if (text.includes("׳¡׳¨׳™׳§") || text.includes("׳‘׳¨׳§׳•׳“") || text.includes("׳׳•׳¦׳¨ ׳׳“׳™׳׳•׳™")) {
+  if (text.includes("סריק") || text.includes("ברקוד") || text.includes("מוצר לדימוי")) {
     return {
       view: "scanner",
-      text: "׳‘׳¢׳׳•׳“ ׳¡׳¨׳™׳§׳” ׳‘׳•׳—׳¨׳™׳ ׳׳•׳¦׳¨ ׳׳”׳¨׳©׳™׳׳” ׳”׳׳“׳•׳׳”. ׳׳™׳“ ׳¨׳•׳׳™׳ ׳׳—׳™׳¨, ׳“׳™׳¨׳•׳’ ׳‘׳¨׳™׳׳•׳×, ׳”׳×׳׳׳” ׳׳₪׳¨׳•׳₪׳™׳ ׳•׳”׳¦׳¢׳× ׳”׳—׳׳₪׳” ׳׳ ׳§׳™׳™׳׳×.",
+      text: "בעמוד סריקה בוחרים מוצר מהרשימה המדומה. מיד רואים מחיר, דירוג בריאות, התאמה לפרופיל והצעת החלפה אם קיימת.",
     };
   }
-  if (text.includes("׳§׳˜׳׳•׳’") || text.includes("׳׳”׳•׳¡׳™׳£ ׳׳•׳¦׳¨") || text.includes("׳”׳•׳¡׳₪׳”") || text.includes("׳׳•׳¦׳¨ ׳—׳“׳©")) {
+  if (text.includes("קטלוג") || text.includes("להוסיף מוצר") || text.includes("הוספה") || text.includes("מוצר חדש")) {
     return {
       view: "list",
-      text: "׳›׳“׳™ ׳׳”׳•׳¡׳™׳£ ׳׳•׳¦׳¨ ׳₪׳•׳×׳—׳™׳ ׳§׳˜׳׳•׳’, ׳׳—׳₪׳©׳™׳ ׳׳•׳¦׳¨ ׳•׳׳•׳—׳¦׳™׳ '׳”׳•׳¡׳₪׳”'. ׳׳ ׳”׳׳•׳¦׳¨ ׳׳ ׳§׳™׳™׳, ׳™׳© ׳׳–׳•׳¨ '׳”׳•׳¡׳₪׳” ׳™׳“׳ ׳™׳×' ׳©׳‘׳• ׳׳›׳ ׳™׳¡׳™׳ ׳©׳, ׳׳—׳™׳¨ ׳•׳§׳˜׳’׳•׳¨׳™׳”.",
+      text: "כדי להוסיף מוצר פותחים קטלוג, מחפשים מוצר ולוחצים 'הוספה'. אם המוצר לא קיים, יש אזור 'הוספה ידנית' שבו מכניסים שם, מחיר וקטגוריה.",
     };
   }
-  if (text.includes("׳×׳§׳¦׳™׳‘") || text.includes("׳׳—׳™׳¨") || text.includes("׳—׳¨׳™׳’׳”") || text.includes("׳ ׳©׳׳¨")) {
+  if (text.includes("תקציב") || text.includes("מחיר") || text.includes("חריגה") || text.includes("נשאר")) {
     return {
       view: "list",
-      text: "׳”׳×׳§׳¦׳™׳‘ ׳׳•׳₪׳™׳¢ ׳‘׳¡׳¨׳’׳ ׳”׳¦׳“ ׳•׳‘׳¨׳©׳™׳׳× ׳”׳§׳ ׳™׳•׳×. ׳׳ ׳”׳§׳ ׳™׳™׳” ׳׳×׳§׳¨׳‘׳× ׳-85% ׳׳”׳×׳§׳¦׳™׳‘, ׳”׳׳¢׳¨׳›׳× ׳׳¡׳׳ ׳× ׳׳–׳”׳¨׳” ׳•׳׳“׳’׳™׳©׳” ׳׳× ׳׳¦׳‘ ׳”׳×׳§׳¦׳™׳‘.",
+      text: "התקציב מופיע בסרגל הצד וברשימת הקניות. אם הקנייה מתקרבת ל-85% מהתקציב, המערכת מסמנת אזהרה ומדגישה את מצב התקציב.",
     };
   }
-  if (text.includes("׳¨׳©׳™׳׳”") || text.includes("׳¦׳³׳§") || text.includes("׳¡׳™׳׳•׳")) {
+  if (text.includes("רשימה") || text.includes("צ׳ק") || text.includes("סימון")) {
     return {
       view: "list",
-      text: "׳‘׳¨׳©׳™׳׳× ׳”׳§׳ ׳™׳•׳× ׳׳₪׳©׳¨ ׳׳¡׳׳ ׳׳•׳¦׳¨׳™׳ ׳©׳ ׳§׳ ׳•, ׳׳׳—׳•׳§ ׳׳•׳¦׳¨׳™׳, ׳׳¨׳׳•׳× ׳§׳˜׳’׳•׳¨׳™׳•׳× ׳•׳׳‘׳“׳•׳§ ׳›׳׳” ׳ ׳©׳׳¨ ׳‘׳×׳§׳¦׳™׳‘.",
+      text: "ברשימת הקניות אפשר לסמן מוצרים שנקנו, למחוק מוצרים, לראות קטגוריות ולבדוק כמה נשאר בתקציב.",
     };
   }
-  if (text.includes("׳×׳•׳‘׳ ׳•׳×") || text.includes("׳—׳™׳¡׳›׳•׳") || text.includes("׳’׳¨׳£") || text.includes("׳§׳‘׳׳”")) {
+  if (text.includes("תובנות") || text.includes("חיסכון") || text.includes("גרף") || text.includes("קבלה")) {
     return {
       view: "dashboard",
-      text: "׳”׳×׳•׳‘׳ ׳•׳× ׳”׳ ׳׳–׳•׳¨ ׳©׳׳ ׳×׳— ׳׳× ׳”׳§׳ ׳™׳•׳× ׳©׳׳: ׳›׳׳” ׳”׳•׳¦׳׳×, ׳›׳׳” ׳—׳¡׳›׳×, ׳׳™׳׳• ׳”׳—׳׳₪׳•׳× ׳׳©׳×׳׳׳•׳× ׳¢׳©׳™׳× ׳•׳׳” ׳׳₪׳©׳¨ ׳׳©׳₪׳¨ ׳‘׳§׳ ׳™׳™׳” ׳”׳‘׳׳”. ׳”׳ ׳¢׳•׳–׳¨׳•׳× ׳׳”׳‘׳™׳ ׳׳× ׳”׳¨׳’׳׳™ ׳”׳§׳ ׳™׳™׳” ׳•׳׳©׳׳•׳˜ ׳˜׳•׳‘ ׳™׳•׳×׳¨ ׳‘׳×׳§׳¦׳™׳‘.",
+      text: "התובנות הן אזור שמנתח את הקניות שלך: כמה הוצאת, כמה חסכת, אילו החלפות משתלמות עשית ומה אפשר לשפר בקנייה הבאה. הן עוזרות להבין את הרגלי הקנייה ולשלוט טוב יותר בתקציב.",
     };
   }
-  if (text.includes("׳₪׳¨׳•׳₪׳™׳") || text.includes("׳׳•׳•׳˜׳׳¨") || text.includes("׳×׳–׳•׳ ׳”") || text.includes("׳׳©׳§ ׳‘׳™׳×")) {
+  if (text.includes("פרופיל") || text.includes("אווטאר") || text.includes("תזונה") || text.includes("משק בית")) {
     return {
       view: "profile",
-      text: "׳‘׳₪׳¨׳•׳₪׳™׳ ׳׳₪׳©׳¨ ׳׳¢׳¨׳•׳ ׳©׳, ׳׳™׳׳™׳™׳, ׳›׳×׳•׳‘׳×, ׳×׳§׳¦׳™׳‘, ׳¡׳•׳₪׳¨ ׳׳•׳¢׳“׳£, ׳׳‘׳—׳•׳¨ ׳׳•׳•׳˜׳׳¨, ׳׳”׳’׳“׳™׳¨ ׳”׳¢׳“׳₪׳•׳× ׳×׳–׳•׳ ׳” ׳•׳׳”׳•׳¡׳™׳£ ׳׳ ׳©׳™׳ ׳׳׳©׳§ ׳”׳‘׳™׳×.",
+      text: "בפרופיל אפשר לערוך שם, אימייל, כתובת, תקציב, סופר מועדף, לבחור אווטאר, להגדיר העדפות תזונה ולהוסיף אנשים למשק הבית.",
     };
   }
-  if (text.includes("׳”׳—׳׳₪׳”") || text.includes("swap") || text.includes("׳‘׳¨׳™׳") || text.includes("׳–׳•׳")) {
+  if (text.includes("החלפה") || text.includes("swap") || text.includes("בריא") || text.includes("זול")) {
     return {
       view: "scanner",
-      text: "׳›׳׳©׳¨ ׳׳׳•׳¦׳¨ ׳™׳© ׳—׳׳•׳₪׳”, SmartCart ׳׳¦׳™׳’׳” ׳›׳¨׳˜׳™׳¡ '׳ ׳¡׳™ ׳׳× ׳–׳” ׳‘׳׳§׳•׳' ׳¢׳ ׳׳—׳™׳¨ ׳—׳“׳©, ׳“׳™׳¨׳•׳’ ׳‘׳¨׳™׳׳•׳× ׳•׳—׳™׳¡׳›׳•׳ ׳¦׳₪׳•׳™. ׳׳₪׳©׳¨ ׳׳‘׳—׳•׳¨ '׳”׳—׳׳₪׳” ׳•׳—׳™׳¡׳›׳•׳'.",
+      text: "כאשר למוצר יש חלופה, SmartCart מציגה כרטיס 'נסי את זה במקום' עם מחיר חדש, דירוג בריאות וחיסכון צפוי. אפשר לבחור 'החלפה וחיסכון'.",
     };
   }
   return {
     view: null,
-    text: "׳׳₪׳©׳¨ ׳׳©׳׳•׳ ׳׳•׳×׳™ ׳¢׳ ׳”׳×׳—׳׳× ׳§׳ ׳™׳™׳”, ׳¡׳¨׳™׳§׳”, ׳§׳˜׳׳•׳’, ׳”׳•׳¡׳₪׳× ׳׳•׳¦׳¨, ׳×׳§׳¦׳™׳‘, ׳¨׳©׳™׳׳× ׳§׳ ׳™׳•׳×, ׳×׳•׳‘׳ ׳•׳× ׳׳• ׳₪׳¨׳•׳₪׳™׳. ׳׳׳©׳: '׳׳™׳ ׳׳•׳¡׳™׳₪׳™׳ ׳׳•׳¦׳¨ ׳—׳“׳©?'",
+    text: "אפשר לשאול אותי על התחלת קנייה, סריקה, קטלוג, הוספת מוצר, תקציב, רשימת קניות, תובנות או פרופיל. למשל: 'איך מוסיפים מוצר חדש?'",
   };
 }
 
@@ -2040,15 +2048,15 @@ function HealthGrade({ grade }) {
 function viewTitle(activeView) {
   switch (activeView) {
     case "home":
-      return "׳‘׳™׳×";
+      return "בית";
     case "list":
-      return "׳¨׳©׳™׳׳× ׳§׳ ׳™׳•׳×";
+      return "רשימת קניות";
     case "dashboard":
-      return "׳×׳•׳‘׳ ׳•׳× ׳—׳™׳¡׳›׳•׳";
+      return "תובנות חיסכון";
     case "profile":
-      return "׳₪׳¨׳•׳₪׳™׳ ׳—׳›׳";
+      return "פרופיל חכם";
     default:
-      return "׳¡׳¨׳™׳§׳”";
+      return "סריקה";
   }
 }
 
@@ -2078,9 +2086,9 @@ function buildLearningModel(list, budget) {
       ...template,
       learned,
       reason: learned
-        ? `׳ ׳׳׳“ ׳׳×׳•׳ ${matches.length} ׳₪׳¨׳™׳˜/׳™׳ ׳‘׳§׳ ׳™׳•׳× ׳”׳׳—׳¨׳•׳ ׳•׳×`
-        : `׳”׳׳׳¦׳” ׳‘׳¡׳™׳¡׳™׳× ׳׳₪׳™ ׳¡׳ ${template.cadence}`,
-      status: learned ? "׳ ׳׳׳“ ׳׳”׳¨׳’׳׳™׳" : "׳׳•׳׳׳¥ ׳׳”׳•׳¡׳™׳£",
+        ? `נלמד מתוך ${matches.length} פריט/ים בקניות האחרונות`
+        : `המלצה בסיסית לפי סל ${template.cadence}`,
+      status: learned ? "נלמד מהרגלים" : "מומלץ להוסיף",
     };
   });
 
@@ -2093,24 +2101,24 @@ function buildLearningModel(list, budget) {
     swapRate,
     insights: [
       {
-        label: "׳׳׳™׳“׳× ׳¡׳",
+        label: "למידת סל",
         value: `${standardBasket.filter((item) => item.learned).length}/${STANDARD_BASKET.length}`,
-        detail: "׳§׳˜׳’׳•׳¨׳™׳•׳× ׳׳”׳¨׳©׳™׳׳” ׳”׳¡׳˜׳ ׳“׳¨׳˜׳™׳× ׳©׳›׳‘׳¨ ׳–׳•׳”׳• ׳׳¦׳ ׳׳׳™",
+        detail: "קטגוריות מהרשימה הסטנדרטית שכבר זוהו אצל מאי",
       },
       {
-        label: "׳§׳˜׳’׳•׳¨׳™׳” ׳—׳•׳–׳¨׳×",
+        label: "קטגוריה חוזרת",
         value: favoriteCategoryLabel,
-        detail: "׳”׳§׳˜׳’׳•׳¨׳™׳” ׳©׳׳•׳₪׳™׳¢׳” ׳”׳›׳™ ׳”׳¨׳‘׳” ׳‘׳§׳ ׳™׳•׳× ׳”׳ ׳•׳›׳—׳™׳•׳×",
+        detail: "הקטגוריה שמופיעה הכי הרבה בקניות הנוכחיות",
       },
       {
-        label: "׳ ׳˜׳™׳™׳× ׳—׳™׳¡׳›׳•׳",
+        label: "נטיית חיסכון",
         value: `${swapRate}%`,
-        detail: "׳©׳™׳¢׳•׳¨ ׳”׳₪׳¨׳™׳˜׳™׳ ׳©׳‘׳”׳ ׳׳׳™ ׳‘׳—׳¨׳” ׳”׳—׳׳₪׳× ׳×׳§׳¦׳™׳‘",
+        detail: "שיעור הפריטים שבהם מאי בחרה החלפת תקציב",
       },
       {
-        label: "׳׳—׳¥ ׳×׳§׳¦׳™׳‘׳™",
+        label: "לחץ תקציבי",
         value: `${budgetShare}%`,
-        detail: "׳›׳׳” ׳׳”׳×׳§׳¦׳™׳‘ ׳”׳—׳•׳“׳©׳™ ׳›׳‘׳¨ ׳׳ ׳•׳¦׳ ׳‘׳¨׳©׳™׳׳”",
+        detail: "כמה מהתקציב החודשי כבר מנוצל ברשימה",
       },
     ],
   };
