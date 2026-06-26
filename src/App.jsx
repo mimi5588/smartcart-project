@@ -876,7 +876,7 @@ function App() {
 
         <div className={warning ? "budget-mini budget-mini-warn" : "budget-mini"}>
           <span>מצב התקציב</span>
-          <strong>?{spent.toFixed(0)} / ?{state.profile.budget}</strong>
+          <strong>₪{spent.toFixed(0)} / ₪{state.profile.budget}</strong>
           <div className="mini-bar">
             <i style={{ width: `${progress}%` }} />
           </div>
@@ -928,6 +928,7 @@ function App() {
         {activeView === "setup" && (
           <SetupView
             budget={state.profile.budget}
+            onBudgetChange={(value) => updateProfile("budget", value)}
             onSelectStore={(store) => updateProfile("supermarket", store)}
             onStart={() => setActiveView("scanner")}
             supermarket={state.profile.supermarket}
@@ -1144,7 +1145,7 @@ function ScannerView({ product, selectedId, setSelectedId, restrictions, onAdd, 
 
         <div className="price-strip">
           <span>מחיר מקורי</span>
-          <strong>?{product.price.toFixed(2)}</strong>
+          <strong>₪{product.price.toFixed(2)}</strong>
         </div>
         <small className="price-disclaimer scanner-disclaimer">
           המחיר מבוסס על בדיקות אחרונות ועשוי להשתנות לפי סניף, מבצע, זמינות ועדכוני ספקים.
@@ -1157,7 +1158,7 @@ function ScannerView({ product, selectedId, setSelectedId, restrictions, onAdd, 
             <p>{product.alternative.insight}</p>
             <div className="compare-grid">
               <span>בריאות {product.health} &rarr; {product.alternative.health}</span>
-              <span>?{product.price.toFixed(2)} &rarr; ?{product.alternative.price.toFixed(2)}</span>
+              <span>₪{product.price.toFixed(2)} &rarr; ₪{product.alternative.price.toFixed(2)}</span>
             </div>
           </div>
         )}
@@ -1206,10 +1207,10 @@ function HomeView({ budget, spent, saved, progress, emoji, avatarBg, onCatalog, 
           <div>
             <p>תקציב חודשי</p>
             <h3>
-              ?{remaining.toFixed(0)}
+              ₪{remaining.toFixed(0)}
               <span>נותרו</span>
             </h3>
-            <small>נחסכו ?{saved.toFixed(0)} מהחלפות חכמות</small>
+            <small>נחסכו ₪{saved.toFixed(0)} מהחלפות חכמות</small>
           </div>
           <div className="home-ring">
             <svg viewBox="0 0 88 88">
@@ -1311,13 +1312,13 @@ function SmartLearningList({ learning, onOpenList, onOpenInsights }) {
       <div className="learning-summary">
         <span>קטגוריה מובילה: <b>{learning.favoriteCategoryLabel}</b></span>
         <span>המערכת זיהתה <b>{learning.swapRate}%</b> נטייה להחלפות חיסכון</span>
-        <span>חיסכון צפוי לקנייה הבאה: <b>?{learning.projectedSavings}</b></span>
+        <span>חיסכון צפוי לקנייה הבאה: <b>₪{learning.projectedSavings}</b></span>
       </div>
     </section>
   );
 }
 
-function SetupView({ budget, supermarket, onSelectStore, onStart }) {
+function SetupView({ budget, supermarket, onSelectStore, onBudgetChange, onStart }) {
   const stores = [
     ["שופרסל", "0.4 ק״מ", "shopping_cart"],
     ["רמי לוי", "1.2 ק״מ", "local_mall"],
@@ -1377,18 +1378,33 @@ function SetupView({ budget, supermarket, onSelectStore, onStart }) {
         <div className="setup-side">
           <article className="setup-card">
             <div className="setup-card-title">
-              <span>?</span>
+              <span>₪</span>
               <h3>תקציב</h3>
             </div>
-            <p>מומלץ לפי ?{budget} שנותרו החודש.</p>
+            <p>מומלץ לפי ₪{budget} שנותרו החודש.</p>
             <div className="setup-budget-input">
-              <strong>?</strong>
-              <input defaultValue="350" type="number" />
+              <strong>₪</strong>
+              <input
+                min="50"
+                max="10000"
+                onChange={(event) => onBudgetChange(Number(event.target.value) || 0)}
+                step="50"
+                type="number"
+                value={budget}
+              />
             </div>
-            <input className="setup-range" defaultValue="35" type="range" />
+            <input
+              className="setup-range"
+              max="10000"
+              min="50"
+              onChange={(event) => onBudgetChange(Number(event.target.value))}
+              step="50"
+              type="range"
+              value={Math.min(10000, Math.max(50, Number(budget) || 50))}
+            />
             <div className="range-labels">
-              <span>?50</span>
-              <span>?1,000</span>
+              <span>₪50</span>
+              <span>₪10,000</span>
             </div>
           </article>
 
@@ -1409,7 +1425,7 @@ function SetupView({ budget, supermarket, onSelectStore, onStart }) {
 
         <article className="setup-card setup-list-toggle">
           <div>
-            <span>ג˜‘</span>
+            <span>🧾</span>
             <div>
               <h3>שימוש ברשימת קניות קיימת</h3>
               <p>טעינה אוטומטית של “קניות שבועיות” עם 12 פריטים.</p>
@@ -1438,8 +1454,8 @@ function ShoppingListView({ categoryGroups, spent, saved, budget, progress, warn
       <div className={warning ? "budget-console glass-panel warning" : "budget-console glass-panel"}>
         <div>
           <p className="kicker">תקציב בזמן אמת</p>
-          <h2>?{spent.toFixed(2)} נוצלו</h2>
-          <span>מתוך מגבלה של ?{budget} - נחסכו ?{saved.toFixed(2)} מהחלפות</span>
+          <h2>₪{spent.toFixed(2)} נוצלו</h2>
+          <span>מתוך מגבלה של ₪{budget} - נחסכו ₪{saved.toFixed(2)} מהחלפות</span>
         </div>
         <div className="budget-bar">
           <i style={{ width: `${progress}%` }} />
@@ -1465,8 +1481,8 @@ function ShoppingListView({ categoryGroups, spent, saved, budget, progress, warn
                     <small>{item.brand} - health {item.health}</small>
                   </span>
                 </label>
-                {item.swapped && <em>החלפת תקציב בוצעה -?{item.saved.toFixed(2)}</em>}
-                <b>?{item.selectedPrice.toFixed(2)}</b>
+                {item.swapped && <em>החלפת תקציב בוצעה -₪{item.saved.toFixed(2)}</em>}
+                <b>₪{item.selectedPrice.toFixed(2)}</b>
                 <button onClick={() => onRemove(item.id)} type="button">הסרה</button>
               </article>
             ))}
@@ -1522,8 +1538,8 @@ function DashboardView({ learning, onReceipt, onReferral }) {
             <span>{trip.date}</span>
             <strong>{trip.store}</strong>
             <div>
-              <b>?{trip.purchases}</b>
-              <em>נחסכו ?{trip.savings}</em>
+              <b>₪{trip.purchases}</b>
+              <em>נחסכו ₪{trip.savings}</em>
             </div>
           </button>
         ))}
@@ -1704,7 +1720,7 @@ function CatalogDrawer({ isOpen, onClose, onAdd }) {
             <article key={item.id}>
               <div>
                 <strong>{item.name}</strong>
-              <span>{CATEGORY_LABELS[item.category] || item.category} - ?{item.price.toFixed(2)}</span>
+              <span>{CATEGORY_LABELS[item.category] || item.category} - ₪{item.price.toFixed(2)}</span>
               </div>
               <button onClick={() => onAdd(item, false)} type="button">הוספה</button>
             </article>
@@ -1731,8 +1747,8 @@ function ReceiptDrawer({ receipt, onClose }) {
             {receipt.items.map(([name, price, discount]) => (
               <article className="receipt-line" key={name}>
                 <span>{name}</span>
-                <b>?{price.toFixed(2)}</b>
-                <em>-?{discount.toFixed(2)}</em>
+                <b>₪{price.toFixed(2)}</b>
+                <em>-₪{discount.toFixed(2)}</em>
               </article>
             ))}
             <div className="receipt-score">
