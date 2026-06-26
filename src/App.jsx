@@ -1231,19 +1231,19 @@ function HomeView({ budget, spent, saved, progress, emoji, avatarBg, onCatalog, 
 
         <section className="home-quick-grid">
           <button onClick={onCatalog} type="button">
-            <span>ן¼‹</span>
+            <span>＋</span>
             הוספת מוצר
           </button>
           <button onClick={() => onNavigate("scanner")} type="button">
-            <span>ג–¦</span>
+            <span>▦</span>
             סריקת ברקוד
           </button>
           <button onClick={() => onNavigate("list")} type="button">
-            <span>ג˜‘</span>
+            <span>☑</span>
             צפייה ברשימות
           </button>
           <button onClick={() => onNavigate("dashboard")} type="button">
-            <span>◌</span>
+            <span>◉</span>
             תובנות
           </button>
         </section>
@@ -1254,7 +1254,7 @@ function HomeView({ budget, spent, saved, progress, emoji, avatarBg, onCatalog, 
             <h4>טיפ שבועי</h4>
             <p>מעבר לחלופת SmartBrand יכול לחסוך לך עד ₪15 בקנייה הקרובה.</p>
           </div>
-          <button onClick={() => onNavigate("dashboard")} type="button">ג€¹</button>
+          <button onClick={() => onNavigate("dashboard")} type="button">›</button>
         </section>
       </main>
 
@@ -1264,15 +1264,15 @@ function HomeView({ budget, spent, saved, progress, emoji, avatarBg, onCatalog, 
           בית
         </button>
         <button onClick={() => onNavigate("dashboard")} type="button">
-          <span>ג—«</span>
+          <span>◉</span>
           דשבורד
         </button>
         <button className="scan-fab" onClick={() => onNavigate("setup")} type="button">
-          <span>ג–¦</span>
+          <span>▦</span>
           סריקה
         </button>
         <button onClick={() => onNavigate("list")} type="button">
-          <span>ג˜‘</span>
+          <span>☑</span>
           רשימות
         </button>
         <button onClick={() => onNavigate("profile")} type="button">
