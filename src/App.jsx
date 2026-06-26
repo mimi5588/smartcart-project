@@ -499,6 +499,7 @@ const DEFAULT_PROFILE = {
   email: "",
   address: "",
   budget: 1200,
+  timeGoal: "30 דק׳",
   emoji: "😊",
   avatarBg: "mint",
   supermarket: "",
@@ -528,6 +529,7 @@ const STANDARD_BASKET = [
 function createDefaultState(profile) {
   return {
     list: [],
+    trips: [],
     profile,
   };
 }
@@ -578,12 +580,14 @@ function normalizeStoredState(baseProfile, storedState) {
   return {
     ...parsed,
     list: Array.isArray(parsed.list) ? parsed.list : [],
+    trips: Array.isArray(parsed.trips) ? parsed.trips : [],
     profile: {
       ...baseProfile,
       ...parsedProfile,
       email: baseProfile.email,
       role: baseProfile.role,
       household,
+      timeGoal: parsedProfile.timeGoal || baseProfile.timeGoal || DEFAULT_PROFILE.timeGoal,
     },
   };
 }
@@ -788,6 +792,42 @@ function App() {
     }));
   }
 
+  function finishShopping() {
+    if (!state.list.length) {
+      flash("אין עדיין מוצרים לסיום קנייה");
+      return;
+    }
+
+    const tripId = `trip-${state.list.map((item) => item.id).join("-")}`;
+    const trip = {
+      id: tripId,
+      store: state.profile.supermarket || "קנייה חדשה",
+      date: new Intl.DateTimeFormat("he-IL", {
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        month: "2-digit",
+      }).format(new Date()),
+      purchases: Number(spent.toFixed(2)),
+      savings: Number(saved.toFixed(2)),
+      timeGoal: state.profile.timeGoal || DEFAULT_PROFILE.timeGoal,
+      items: state.list.map((item) => [
+        item.selectedName,
+        Number(item.selectedPrice.toFixed(2)),
+        Number(item.saved.toFixed(2)),
+      ]),
+    };
+
+    setState((current) => ({
+      ...current,
+      list: [],
+      trips: [trip, ...(current.trips || [])].slice(0, 8),
+    }));
+    setReceipt(trip);
+    setActiveView("dashboard");
+    flash("הקנייה הסתיימה ונשמרה בתובנות");
+  }
+
   function updateProfile(field, value) {
     setState((current) => ({
       ...current,
@@ -933,7 +973,9 @@ function App() {
             onBudgetChange={(value) => updateProfile("budget", value)}
             onSelectStore={(store) => updateProfile("supermarket", store)}
             onStart={() => setActiveView("scanner")}
+            onTimeGoalChange={(timeGoal) => updateProfile("timeGoal", timeGoal)}
             supermarket={state.profile.supermarket}
+            timeGoal={state.profile.timeGoal}
           />
         )}
 
@@ -959,6 +1001,7 @@ function App() {
           <ShoppingListView
             categoryGroups={categoryGroups}
             onCatalog={() => setCatalogOpen(true)}
+            onFinish={finishShopping}
             onRemove={removeItem}
             onToggle={toggleComplete}
             progress={progress}
@@ -974,6 +1017,7 @@ function App() {
             learning={learning}
             onReferral={() => setReferralOpen(true)}
             onReceipt={setReceipt}
+            trips={state.trips || []}
           />
         )}
 
@@ -1321,7 +1365,7 @@ function SmartLearningList({ learning, onOpenList, onOpenInsights }) {
   );
 }
 
-function SetupView({ budget, supermarket, onSelectStore, onBudgetChange, onStart }) {
+function SetupView({ budget, supermarket, timeGoal, onSelectStore, onBudgetChange, onTimeGoalChange, onStart }) {
   const stores = [
     ["שופרסל", "0.4 ק״מ", "shopping_cart"],
     ["רמי לוי", "1.2 ק״מ", "local_mall"],
@@ -1416,9 +1460,15 @@ function SetupView({ budget, supermarket, onSelectStore, onBudgetChange, onStart
               <span>⏱</span>
               <h3>יעד זמן</h3>
             </div>
+            <p>הגדירי כמה זמן את מקציבה לקנייה הזו.</p>
             <div className="time-options">
               {["15 דק׳", "30 דק׳", "45 דק׳", "60 דק׳"].map((time) => (
-                <button className={time === "30 דק׳" ? "selected" : ""} key={time} type="button">
+                <button
+                  className={time === timeGoal ? "selected" : ""}
+                  key={time}
+                  onClick={() => onTimeGoalChange(time)}
+                  type="button"
+                >
                   {time}
                 </button>
               ))}
@@ -1445,13 +1495,15 @@ function SetupView({ budget, supermarket, onSelectStore, onBudgetChange, onStart
         <button className="home-primary-action" onClick={onStart} type="button">
           🛒 התחילי קנייה
         </button>
-        <p>SmartCart תסדר לך מסלול חכם לפי הרשימה והתקציב.</p>
+        <p>SmartCart תסדר לך מסלול חכם לפי הרשימה, התקציב ויעד הזמן של {timeGoal || DEFAULT_PROFILE.timeGoal}.</p>
       </div>
     </section>
   );
 }
 
-function ShoppingListView({ categoryGroups, spent, saved, budget, progress, warning, onToggle, onRemove, onCatalog }) {
+function ShoppingListView({ categoryGroups, spent, saved, budget, progress, warning, onToggle, onRemove, onCatalog, onFinish }) {
+  const itemCount = Object.values(categoryGroups).reduce((sum, items) => sum + items.length, 0);
+
   return (
     <section className="list-layout">
       <div className={warning ? "budget-console glass-panel warning" : "budget-console glass-panel"}>
@@ -1468,8 +1520,21 @@ function ShoppingListView({ categoryGroups, spent, saved, budget, progress, warn
 
       <div className="list-toolbar">
         <h2>צ'קליסט קניות אינטראקטיבי</h2>
-        <button className="primary-button" onClick={onCatalog} type="button">הוספה מהקטלוג</button>
+        <div className="button-row">
+          <button className="ghost-button" onClick={onCatalog} type="button">הוספה מהקטלוג</button>
+          <button className="primary-button" disabled={!itemCount} onClick={onFinish} type="button">
+            סיום קנייה
+          </button>
+        </div>
       </div>
+
+      {!itemCount && (
+        <div className="empty-list glass-panel">
+          <strong>הרשימה עדיין ריקה</strong>
+          <p>הוסיפי מוצרים מהקטלוג או מהסריקה, ואז תוכלי לסיים את הקנייה ולשמור קבלה.</p>
+          <button className="primary-button" onClick={onCatalog} type="button">הוספת מוצר ראשון</button>
+        </div>
+      )}
 
       <div className="category-stack">
         {Object.entries(categoryGroups).map(([category, items]) => (
@@ -1496,7 +1561,9 @@ function ShoppingListView({ categoryGroups, spent, saved, budget, progress, warn
   );
 }
 
-function DashboardView({ learning, onReceipt, onReferral }) {
+function DashboardView({ learning, trips, onReceipt, onReferral }) {
+  const visibleTrips = [...trips, ...TRIPS].slice(0, 8);
+
   return (
     <section className="dashboard-layout">
       <div className="insight-strip">
@@ -1536,7 +1603,7 @@ function DashboardView({ learning, onReceipt, onReferral }) {
       </div>
 
       <div className="receipt-grid">
-        {TRIPS.map((trip) => (
+        {visibleTrips.map((trip) => (
           <button className="trip-card glass-panel" key={trip.id} onClick={() => onReceipt(trip)} type="button">
             <span>{trip.date}</span>
             <strong>{trip.store}</strong>
@@ -1544,6 +1611,7 @@ function DashboardView({ learning, onReceipt, onReferral }) {
               <b>₪{trip.purchases}</b>
               <em>נחסכו ₪{trip.savings}</em>
             </div>
+            {trip.timeGoal && <small>יעד זמן: {trip.timeGoal}</small>}
           </button>
         ))}
       </div>
@@ -1744,6 +1812,7 @@ function ReceiptDrawer({ receipt, onClose }) {
               <div>
                 <p className="kicker">{receipt.date}</p>
                 <h2>חשבונית {receipt.store}</h2>
+                {receipt.timeGoal && <small>יעד זמן: {receipt.timeGoal}</small>}
               </div>
               <button className="icon-button" onClick={onClose} type="button">X</button>
             </div>

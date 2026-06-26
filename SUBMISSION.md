@@ -19,13 +19,14 @@
 
 1. Open the live Vercel URL.
 2. Sign in or create a new account.
-3. Choose a supermarket.
+3. Choose a supermarket, budget, and time goal.
 4. Go to the scanner.
 5. Select or scan a product.
 6. Add the product or accept a cheaper/healthier swap.
 7. Open the shopping list and mark items as completed.
-8. Open insights to view savings and basket analysis.
-9. Open profile to edit budget, avatar, household members, and dietary preferences.
+8. Finish the shopping trip and verify the generated receipt appears in insights.
+9. Open insights to view savings, basket analysis, and completed trips.
+10. Open profile to edit budget, avatar, household members, and dietary preferences.
 
 ## External services and integrations
 
